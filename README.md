@@ -1,4 +1,4 @@
-# <NOME_DO_PROJETO>
+# gestor-terefas-angular-spring
 
 > Aplicação full stack (Spring Boot + Angular) para <descrever em 1 linha o objetivo do sistema>.
 
