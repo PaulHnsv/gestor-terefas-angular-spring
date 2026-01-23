@@ -1,0 +1,34 @@
+<h2>Status da Aplicação</h2>
+
+<section style="margin-top: 12px;">
+  <h3>Ping</h3>
+
+  <p *ngIf="ping; else pingLoading">
+    <strong>Mensagem:</strong>
+    <span [style.color]="ping.message === 'pong' ? 'green' : 'red'">
+      {{ ping.message }}
+    </span>
+    <br />
+    <strong>Timestamp:</strong> {{ ping.timestamp }}
+  </p>
+
+  <ng-template #pingLoading>
+    <p>Carregando ping...</p>
+  </ng-template>
+</section>
+
+<hr style="margin: 16px 0;" />
+
+<section>
+  <h3>Versão</h3>
+
+  <p *ngIf="versionInfo; else versionLoading">
+    <strong>App:</strong> {{ versionInfo.name }} <br />
+    <strong>Versão:</strong> {{ versionInfo.version }} <br />
+    <strong>Timestamp:</strong> {{ versionInfo.timestamp }}
+  </p>
+
+  <ng-template #versionLoading>
+    <p>Carregando versão...</p>
+  </ng-template>
+</section>
