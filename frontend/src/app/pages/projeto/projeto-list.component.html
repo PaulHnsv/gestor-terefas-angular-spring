@@ -23,3 +23,43 @@
     </tr>
   </tbody>
 </table>
+
+<h2>Criar projeto</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div style="margin-bottom: 12px;">
+    <label for="nome">Nome *</label><br />
+    <input id="nome" type="text" formControlName="nome" [disabled]="loading" />
+
+    <div style="color: #b00020; margin-top: 6px;" *ngIf="nameCtrl.touched && nameCtrl.invalid">
+      <div *ngIf="nameCtrl.errors?.['required']">Nome é obrigatório.</div>
+      <div *ngIf="nameCtrl.errors?.['minlength']">Mínimo de 2 caracteres.</div>
+      <div *ngIf="nameCtrl.errors?.['maxlength']">Máximo de 80 caracteres.</div>
+    </div>
+
+    <div style="color: #b00020; margin-top: 6px;" *ngIf="fieldErrors['nome']">
+      {{ fieldErrors['nome'] }}
+    </div>
+  </div>
+
+  <div style="margin-bottom: 12px;">
+    <label for="descricao">Descrição</label><br />
+    <textarea id="descricao" rows="3" formControlName="descricao" [disabled]="loading"></textarea>
+
+    <div style="color: #b00020; margin-top: 6px;" *ngIf="fieldErrors['descricao']">
+      {{ fieldErrors['descricao'] }}
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="loading">
+    {{ loading ? 'Criando...' : 'Criar projeto' }}
+  </button>
+
+  <div style="margin-top: 12px; color: #1b5e20;" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+
+  <div style="margin-top: 12px; color: #b00020;" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+</form>
