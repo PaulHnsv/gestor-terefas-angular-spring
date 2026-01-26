@@ -1,4 +1,4 @@
-package com.paulo.gestortarefas.modules.projeto.application.usecase;
+package com.paulo.gestortarefas.modules.projeto.application.service;
 
 import com.paulo.gestortarefas.modules.projeto.application.dto.ProjetoDTO;
 import org.springframework.stereotype.Service;
@@ -25,5 +25,10 @@ public class ProjetoService {
         }
 
         return lista;
+    }
+
+    public String postProjeto(ProjetoDTO projetoDTO){
+        System.out.println("salvo com sucesso");
+        return "Projeto Criado com sucesso";
     }
 }
