@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjetoService } from '../../core/services/projeto.service';
-import { ProjetoDTO } from '../../pages/projeto/projeto.model';
+import { ProjetoService } from '../../services/projeto.service';
+import { ProjetoDTO } from '../../models/projeto.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
-import { CreateProjectRequest, ProjetoDTO } from '../../pages/projeto/projeto.model';
+import { CreateProjectRequest, ProjetoDTO } from '../models/projeto.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })

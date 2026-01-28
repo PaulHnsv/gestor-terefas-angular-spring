@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppStatusService } from '../../core/services/app-status.service';
+import { AppStatusService } from 'src/app/core/services/app-status.service';
 
 @Component({
   selector: 'app-home',
