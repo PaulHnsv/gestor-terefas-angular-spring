@@ -5,6 +5,7 @@ import com.paulo.gestortarefas.features.projects.application.dto.ProjectResponse
 import com.paulo.gestortarefas.features.projects.domain.ports.inbound.CreateProjectUseCase;
 import com.paulo.gestortarefas.features.projects.domain.ports.inbound.ListProjectsUseCase;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,14 +15,10 @@ import java.util.List;
 @RequestMapping("/api/projects")
 public class ProjectController {
 
-    private final CreateProjectUseCase createUseCase;
-    private final ListProjectsUseCase listUseCase;
-
-    public ProjectController(CreateProjectUseCase createUseCase,
-                             ListProjectsUseCase listUseCase) {
-        this.createUseCase = createUseCase;
-        this.listUseCase = listUseCase;
-    }
+    @Autowired
+    private CreateProjectUseCase createUseCase;
+    @Autowired
+    private ListProjectsUseCase listUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

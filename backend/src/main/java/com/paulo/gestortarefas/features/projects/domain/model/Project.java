@@ -1,23 +1,24 @@
 package com.paulo.gestortarefas.features.projects.domain.model;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Objects;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Project {
 
-    private  Long id;
-
-    @NotBlank(message = "nome é obrigatório")
-    @NotNull(message = "nome é obrigatório")
+    private Long id;
     private String name;
+
+    public Project(Long id, String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name é obrigatório");
+        }
+        this.id = id;
+        this.name = name.trim();
+    }
 
     @Override
     public boolean equals(Object o) {

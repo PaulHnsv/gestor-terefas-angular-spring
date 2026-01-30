@@ -5,7 +5,6 @@ import com.paulo.gestortarefas.features.projects.application.dto.ProjectResponse
 import com.paulo.gestortarefas.features.projects.domain.model.Project;
 import com.paulo.gestortarefas.features.projects.domain.ports.inbound.CreateProjectUseCase;
 import com.paulo.gestortarefas.features.projects.domain.ports.outbound.ProjectRepository;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
