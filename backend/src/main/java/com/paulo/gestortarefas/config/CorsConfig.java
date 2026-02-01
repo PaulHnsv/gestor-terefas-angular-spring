@@ -18,7 +18,7 @@ public class CorsConfig {
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         cors.setAllowedHeaders(List.of("*"));
 
-        // Se você NÃO usa cookie/sessão, deixe false (mais simples)
+        // Se NÃO usa cookie/sessão, deixe false (mais simples)
         cors.setAllowCredentials(false);
 
         // Cache do preflight (ajuda performance)

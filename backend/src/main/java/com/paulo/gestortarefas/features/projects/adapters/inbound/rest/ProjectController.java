@@ -23,7 +23,7 @@ public class ProjectController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProjectResponse create(@Valid @RequestBody ProjectRequest request) {
-        return createUseCase.create(request.getName());
+        return createUseCase.create(request.getName(), request.getDescription());
     }
 
     @GetMapping

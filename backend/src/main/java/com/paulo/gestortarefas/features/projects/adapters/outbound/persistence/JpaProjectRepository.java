@@ -15,16 +15,16 @@ public class JpaProjectRepository implements ProjectRepository {
 
     @Override
     public Project save(Project project) {
-        ProjectJpaEntity entity = new ProjectJpaEntity(null, project.getName());
+        ProjectJpaEntity entity = new ProjectJpaEntity(null, project.getName(), project.getCreatedAt(), project.getDescription());
         ProjectJpaEntity saved = springData.save(entity);
-        return new Project(saved.getId(), saved.getName());
+        return new Project(saved.getId(), saved.getName(), saved.getCreatedAt(), saved.getDescription());
     }
 
     @Override
     public List<Project> findAll() {
         return springData.findAll()
                 .stream()
-                .map(e -> new Project(e.getId(), e.getName()))
+                .map(e -> new Project(e.getId(), e.getName(), e.getCreatedAt(), e.getDescription()))
                 .toList();
     }
 }

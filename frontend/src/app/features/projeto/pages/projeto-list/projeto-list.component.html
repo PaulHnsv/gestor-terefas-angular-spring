@@ -6,16 +6,16 @@
 <table *ngIf="!carregando && !erro" border="1" cellpadding="8" cellspacing="0">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Nome</th>
       <th>Descrição</th>
-      <th>Data de Criação</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let p of projetos">
-      <td>{{ p?.nome }}</td>
-      <td>{{ p?.descricao }}</td>
-      <td>{{ p?.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
+      <td>{{ p?.id }}</td>
+      <td>{{ p?.name }}</td>
+      <td>{{ p?.description }}</td>
     </tr>
 
     <tr *ngIf="projetos.length === 0">

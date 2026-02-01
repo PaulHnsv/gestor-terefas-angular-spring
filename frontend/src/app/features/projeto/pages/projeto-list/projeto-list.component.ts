@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjetoService } from '../../services/projeto.service';
-import { ProjetoDTO } from '../../models/projeto.model';
+import { ProjectRequest, ProjectResponse } from '../../models/projeto.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { finalize } from 'rxjs/operators';
    imports: [CommonModule, ReactiveFormsModule],
 })
 export class ProjetosListComponent implements OnInit {
-  projetos: ProjetoDTO[] = [];
+  projetos: ProjectResponse[] = [];
   carregando = false;
   erro: string | null = null;
 
@@ -45,7 +45,6 @@ export class ProjetosListComponent implements OnInit {
 
     this.projetoService.listar().subscribe({
       next: (data) => {
-        console.log('Projetos carregados', data);
         this.projetos = data ?? [];
         this.carregando = false;
       },
@@ -74,15 +73,15 @@ export class ProjetosListComponent implements OnInit {
     this.loading = true;
 
     const payload = {
-      nome: (this.form.value.nome ?? '').trim(),
-      descricao: this.form.value.descricao?.trim() || null
+      name: (this.form.value.nome ?? '').trim(),
+      description: this.form.value.descricao?.trim() || null
     };
 
     this.projetoService.create(payload)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (created) => {
-          this.successMessage = `Projeto criado: ${created.nome}`;
+          this.successMessage = `Projeto criado: ${created.name}`;
           this.form.reset({ nome: '', descricao: '' });
         },
         error: (err) => {

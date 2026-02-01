@@ -1,11 +1,10 @@
-export interface ProjetoDTO {
-  nome: string;
-  descricao: string;
-  dataCriacao: string; 
-  // vem do backend como string (ISO). Ex: "2026-01-24T12:34:56.000+00:00"
+export interface ProjectResponse {
+  name: string;
+  description: string;
+  id: string; 
 }
 
-export interface CreateProjectRequest {
-  nome: string;
-  descricao?: string | null;
+export interface ProjectRequest {
+  name: string;
+  description?: string | null;
 }

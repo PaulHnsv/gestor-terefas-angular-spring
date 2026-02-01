@@ -14,7 +14,7 @@ import java.util.List;
 public class ListProjectsService implements ListProjectsUseCase {
 
     @Autowired
-    private  ProjectRepository repository;
+    private ProjectRepository repository;
 
     @Override
     public List<ProjectResponse> list() {

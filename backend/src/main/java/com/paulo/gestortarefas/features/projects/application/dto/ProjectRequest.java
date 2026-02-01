@@ -14,6 +14,5 @@ public class ProjectRequest {
     @NotNull(message = "O nome é obrigatório")
     private String name;
     private String description;
-    private Date createdAt;
 
 }

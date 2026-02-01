@@ -13,12 +13,18 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults()) // usa o bean CorsConfigurationSource
+                // Para estudo: desabilitar CSRF inteiro é ok.
+                // Se preferir manter CSRF, pelo menos ignore o H2:
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/h2/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/h2/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().permitAll()
                 )
+                // H2 Console precisa abrir em frame
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .build();
     }
 }

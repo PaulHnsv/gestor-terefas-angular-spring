@@ -2,6 +2,7 @@ package com.paulo.gestortarefas.features.projects.domain.model;
 
 import lombok.*;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -11,13 +12,17 @@ public class Project {
 
     private Long id;
     private String name;
+    private Date createdAt;
+    private String description;
 
-    public Project(Long id, String name) {
+    public Project(Long id, String name, Date createdAt, String description) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("name é obrigatório");
         }
         this.id = id;
         this.name = name.trim();
+        this.createdAt = createdAt;
+        this.description = description;
     }
 
     @Override

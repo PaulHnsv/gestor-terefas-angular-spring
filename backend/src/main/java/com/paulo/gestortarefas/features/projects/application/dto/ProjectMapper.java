@@ -4,6 +4,6 @@ import com.paulo.gestortarefas.features.projects.domain.model.Project;
 
 public class ProjectMapper {
     public static ProjectResponse toResponse(Project project) {
-        return new ProjectResponse(project.getId(), project.getName());
+        return new ProjectResponse(project.getId(), project.getName(), project.getDescription());
     }
 }
