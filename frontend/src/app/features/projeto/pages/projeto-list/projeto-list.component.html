@@ -1,9 +1,10 @@
 <h2>Projects</h2>
 
-<div *ngIf="carregando">Carregando...</div>
-<div *ngIf="erro" style="color: red;">{{ erro }}</div>
+<ng-container *ngIf="projetos$ | async as p">
+  <div *ngIf="p.status === 'loading'">Carregando...</div>
+  <div *ngIf="p.status === 'error'" style="color: red;">{{ p.message }}</div>
 
-<table *ngIf="!carregando && !erro" border="1" cellpadding="8" cellspacing="0">
+  <table *ngIf="p.status === 'success'" border="1" cellpadding="8" cellspacing="0">
   <thead>
     <tr>
       <th>ID</th>
@@ -12,54 +13,72 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let p of projetos">
-      <td>{{ p?.id }}</td>
-      <td>{{ p?.name }}</td>
-      <td>{{ p?.description }}</td>
-    </tr>
-
-    <tr *ngIf="projetos.length === 0">
-      <td colspan="3">Nenhum projeto encontrado.</td>
-    </tr>
+    <ng-container *ngIf="projetos$ | async as viewState">
+      <ng-container *ngIf="viewState.status === 'success' && viewState.data as projetos">
+        <tr *ngFor="let p of projetos">
+          <td>{{ p?.id }}</td>
+          <td>{{ p?.name }}</td>
+          <td>{{ p?.description }}</td>
+        </tr>
+        <tr *ngIf="projetos.length === 0">
+          <td colspan="3">Nenhum projeto encontrado.</td>
+        </tr>
+      </ng-container>
+    </ng-container>
   </tbody>
 </table>
+
+
+</ng-container>
 
 <h2>Criar projeto</h2>
 
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <div style="margin-bottom: 12px;">
-    <label for="nome">Nome *</label><br />
-    <input id="nome" type="text" formControlName="nome" [disabled]="loading" />
+  <ng-container *ngIf="state as vm">
+    <div style="margin-bottom: 12px;">
+      <label for="nome">Nome *</label><br />
+      <input
+        id="nome"
+        type="text"
+        formControlName="nome"
+        [disabled]="loading"
+      />
 
-    <div style="color: #b00020; margin-top: 6px;" *ngIf="nameCtrl.touched && nameCtrl.invalid">
-      <div *ngIf="nameCtrl.errors?.['required']">Nome é obrigatório.</div>
-      <div *ngIf="nameCtrl.errors?.['minlength']">Mínimo de 2 caracteres.</div>
-      <div *ngIf="nameCtrl.errors?.['maxlength']">Máximo de 80 caracteres.</div>
+      <div style="color: #b00020; margin-top: 6px;" *ngIf="nameCtrl.touched && nameCtrl.invalid">
+        <div *ngIf="nameCtrl.errors?.['required']">Nome é obrigatório.</div>
+        <div *ngIf="nameCtrl.errors?.['minlength']">Mínimo de 2 caracteres.</div>
+        <div *ngIf="nameCtrl.errors?.['maxlength']">Máximo de 80 caracteres.</div>
+      </div>
+
+      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['name']">
+        {{ state.fieldErrors?.['name'] }}
+      </div>
     </div>
 
-    <div style="color: #b00020; margin-top: 6px;" *ngIf="fieldErrors['nome']">
-      {{ fieldErrors['nome'] }}
+    <div style="margin-bottom: 12px;">
+      <label for="descricao">Descrição</label><br />
+      <textarea
+        id="descricao"
+        rows="3"
+        formControlName="descricao"
+        [disabled]="state.status === 'loading'"
+      ></textarea>
+
+      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['description']">
+        {{ state.fieldErrors?.['description'] }}
+      </div>
     </div>
-  </div>
 
-  <div style="margin-bottom: 12px;">
-    <label for="descricao">Descrição</label><br />
-    <textarea id="descricao" rows="3" formControlName="descricao" [disabled]="loading"></textarea>
+    <button type="submit" [disabled]="state.status === 'loading'">
+      {{ state.status === 'loading' ? 'Criando...' : 'Criar projeto' }}
+    </button>
 
-    <div style="color: #b00020; margin-top: 6px;" *ngIf="fieldErrors['descricao']">
-      {{ fieldErrors['descricao'] }}
+    <div style="margin-top: 12px; color: #1b5e20;" *ngIf="state.status === 'success'">
+      {{ state.successMessage }}
     </div>
-  </div>
 
-  <button type="submit" [disabled]="loading">
-    {{ loading ? 'Criando...' : 'Criar projeto' }}
-  </button>
-
-  <div style="margin-top: 12px; color: #1b5e20;" *ngIf="successMessage">
-    {{ successMessage }}
-  </div>
-
-  <div style="margin-top: 12px; color: #b00020;" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
+    <div style="margin-top: 12px; color: #b00020;" *ngIf="state.status === 'error'">
+      {{ state.errorMessage }}
+    </div>
+  </ng-container>
 </form>

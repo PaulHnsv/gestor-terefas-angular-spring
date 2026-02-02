@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppStatusService } from 'src/app/core/services/app-status.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,20 +11,13 @@ import { AppStatusService } from 'src/app/core/services/app-status.service';
 })
 export class HomeComponent implements OnInit {
 
-  ping?: { message: string; timestamp: string };
-  versionInfo?: { version: string; name: string; timestamp: string };
+ping$!: Observable<{ message: string; timestamp: string }>;
+versionInfo$!: Observable<{ version: string; name: string; timestamp: string }>;
 
   constructor(private appStatusService: AppStatusService) {}
 
   ngOnInit(): void {
-    this.appStatusService.getPing().subscribe(r => {
-      console.log('PING', r);
-      this.ping = r;
-    });
-
-    this.appStatusService.getVersion().subscribe(r => {
-      console.log('VERSION', r);
-      this.versionInfo = r;
-    });
+  this.ping$ = this.appStatusService.getPing();
+  this.versionInfo$ = this.appStatusService.getVersion();
   }
 }

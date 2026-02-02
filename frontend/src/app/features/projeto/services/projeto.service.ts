@@ -11,7 +11,7 @@ export class ProjetoService {
 
   constructor(private http: HttpClient) {}
 
-  listar(): Observable<ProjectResponse[]> {
+  list(): Observable<ProjectResponse[]> {
     return this.http.get<ProjectResponse[]>(this.baseUrl);
   }
 

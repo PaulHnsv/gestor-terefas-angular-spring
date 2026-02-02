@@ -3,7 +3,7 @@
 <section style="margin-top: 12px;">
   <h3>Ping</h3>
 
-  <p *ngIf="ping; else pingLoading">
+  <p *ngIf="ping$ | async as ping; else pingLoading">
     <strong>Mensagem:</strong>
     <span [style.color]="ping.message === 'pong' ? 'green' : 'red'">
       {{ ping.message }}
@@ -22,7 +22,7 @@
 <section>
   <h3>Versão</h3>
 
-  <p *ngIf="versionInfo; else versionLoading">
+  <p *ngIf="versionInfo$ | async as versionInfo; else versionLoading">
     <strong>App:</strong> {{ versionInfo.name }} <br />
     <strong>Versão:</strong> {{ versionInfo.version }} <br />
     <strong>Timestamp:</strong> {{ versionInfo.timestamp }}

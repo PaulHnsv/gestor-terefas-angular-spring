@@ -3,27 +3,46 @@ import { ProjetoService } from '../../services/projeto.service';
 import { ProjectRequest, ProjectResponse } from '../../models/projeto.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
+import {
+  catchError,
+  exhaustMap,
+  finalize,
+  map,
+  shareReplay,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-projetos-list',
+  standalone: true,
   templateUrl: './projeto-list.component.html',
-   imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class ProjetosListComponent implements OnInit {
-  projetos: ProjectResponse[] = [];
-  carregando = false;
-  erro: string | null = null;
+  projetos$!: Observable<ViewState<ProjectResponse[]>>;
 
-  successMessage = '';
-  errorMessage = '';
-  fieldErrors: Record<string, string> = {};
-  loading = false;
-  
+  private refresh$ = new BehaviorSubject<void>(undefined);
+
+  projects$ = this.refresh$.pipe(
+    startWith(void 0),
+    switchMap(() => this.projetoService.list()),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
+
+  state: ProjetoFormState = { status: 'idle', fieldErrors: {} };
+
+  get loading() {
+    return this.state.status === 'loading';
+  }
+
   form;
 
-  constructor(private fb: FormBuilder, 
-    private projetoService: ProjetoService
+  constructor(
+    private fb: FormBuilder,
+    private projetoService: ProjetoService,
   ) {
     this.form = this.createForm();
   }
@@ -31,29 +50,31 @@ export class ProjetosListComponent implements OnInit {
   private createForm() {
     return this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
-      descricao: ['']
+      descricao: [''],
     });
   }
-  
+
   ngOnInit(): void {
     this.carregar();
   }
 
   carregar(): void {
-    this.carregando = true;
-    this.erro = null;
-
-    this.projetoService.listar().subscribe({
-      next: (data) => {
-        this.projetos = data ?? [];
-        this.carregando = false;
-      },
-      error: (err) => {
-        this.erro = 'Falha ao carregar projetos. Verifique API/CORS.';
-        this.carregando = false;
-        console.error(err);
-      }
-    });
+    this.projetos$ = this.refresh$.pipe(
+      switchMap(() =>
+        this.projetoService.list().pipe(
+          map((data) => ({ status: 'success', data }) as const),
+          startWith({ status: 'loading' } as const),
+          catchError(() =>
+            of({
+              status: 'error',
+              message: 'Falha ao carregar projetos.',
+              fieldErrors: {},
+            } as const),
+          ),
+        ),
+      ),
+      shareReplay(1),
+    );
   }
 
   get nameCtrl() {
@@ -61,44 +82,57 @@ export class ProjetosListComponent implements OnInit {
   }
 
   submit(): void {
-    this.successMessage = '';
-    this.errorMessage = '';
-    this.fieldErrors = {};
+    this.state = { status: 'idle', fieldErrors: {} };
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.state = {
+        status: 'error',
+        errorMessage: 'Corrija os campos obrigatórios.',
+        fieldErrors: {},
+      };
       return;
     }
 
-    this.loading = true;
-
     const payload = {
       name: (this.form.value.nome ?? '').trim(),
-      description: this.form.value.descricao?.trim() || null
+      description: this.form.value.descricao?.trim() || null,
     };
 
-    this.projetoService.create(payload)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe({
-        next: (created) => {
-          this.successMessage = `Projeto criado: ${created.name}`;
+    this.state = { status: 'loading', fieldErrors: {} };
+
+    this.projetoService
+      .create(payload)
+      .pipe(
+        tap((created) => {
           this.form.reset({ nome: '', descricao: '' });
-        },
-        error: (err) => {
-          // Tentativa de ler padrão comum de validação (ajuste pro seu backend)
+          this.refresh$.next();
+          this.state = {
+            status: 'success',
+            successMessage: `Projeto criado: ${created.name}`,
+            fieldErrors: {},
+          };
+        }),
+        catchError((err) => {
           const body = err?.error;
 
-          // Exemplo 1: { message: "...", fieldErrors: { name: "obrigatório" } }
           if (body?.fieldErrors) {
-            this.fieldErrors = body.fieldErrors;
-            this.errorMessage = body.message || 'Erro de validação.';
-            return;
+            this.state = {
+              status: 'error',
+              errorMessage: body.message || 'Erro de validação.',
+              fieldErrors: body.fieldErrors,
+            };
+            return EMPTY;
           }
 
-          // Exemplo 2: Spring validation padrão pode vir como { errors: [...] }
-          // (depende de como você implementou)
-          this.errorMessage = body?.message || 'Não foi possível criar o projeto.';
-        }
-      });
-}
+          this.state = {
+            status: 'error',
+            errorMessage: body?.message || 'Falha ao criar projeto.',
+            fieldErrors: {},
+          };
+          return EMPTY;
+        }),
+      )
+      .subscribe();
+  }
 }
