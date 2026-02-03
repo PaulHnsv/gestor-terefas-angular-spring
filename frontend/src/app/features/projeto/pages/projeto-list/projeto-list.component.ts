@@ -24,7 +24,7 @@ export class ProjetosListComponent implements OnInit {
 
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  state: ProjetoFormState = { status: 'idle', fieldErrors: {} };
+  state: FormState = { status: 'idle', fieldErrors: {} };
 
   get loading() {
     return this.state.status === 'loading';

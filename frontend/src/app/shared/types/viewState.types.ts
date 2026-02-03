@@ -4,10 +4,3 @@ type ViewState<T> =
   | { status: 'success'; data: T };  
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
-
-interface ProjetoFormState {
-  status: Status;
-  successMessage?: string;
-  errorMessage?: string;
-  fieldErrors?: Record<string, string>;
-}
