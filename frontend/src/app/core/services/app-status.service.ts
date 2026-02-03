@@ -13,10 +13,10 @@ export class AppStatusService {
   constructor(private http: HttpClient) {}
 
   getPing(): Observable<any> {
-    return this.http.get(`${this.API}/tarefas/api/ping`);
+    return this.http.get(`${this.API}/api/ping`);
   }
 
   getVersion(): Observable<any> {
-    return this.http.get(`${this.API}/tarefas/api/version`);
+    return this.http.get(`${this.API}/api/version`);
   }
 }

@@ -1,19 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjetoService } from '../../services/projeto.service';
-import { ProjectRequest, ProjectResponse } from '../../models/projeto.model';
+import { ProjectResponse } from '../../models/projeto.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   catchError,
-  exhaustMap,
-  finalize,
   map,
   shareReplay,
   startWith,
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-projetos-list',
@@ -25,12 +23,6 @@ export class ProjetosListComponent implements OnInit {
   projetos$!: Observable<ViewState<ProjectResponse[]>>;
 
   private refresh$ = new BehaviorSubject<void>(undefined);
-
-  projects$ = this.refresh$.pipe(
-    startWith(void 0),
-    switchMap(() => this.projetoService.list()),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
 
   state: ProjetoFormState = { status: 'idle', fieldErrors: {} };
 
