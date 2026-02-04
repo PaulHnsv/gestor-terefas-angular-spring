@@ -27,4 +27,17 @@ public class JpaProjectRepository implements ProjectRepository {
                 .map(e -> new Project(e.getId(), e.getName(), e.getCreatedAt(), e.getDescription()))
                 .toList();
     }
+
+    public Project findById(long id) {
+        return springData.findById(id)
+                .map(entity -> new Project(
+                entity.getId(), entity.getName(), entity.getCreatedAt(), entity.getDescription()))
+                .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado com id: " + id));
+
+    }
+
+    @Override
+    public void delete(long id) {
+        springData.deleteById(id);
+    }
 }

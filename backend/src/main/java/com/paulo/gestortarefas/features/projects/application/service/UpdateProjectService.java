@@ -4,23 +4,21 @@ import com.paulo.gestortarefas.features.projects.application.dto.ProjectMapper;
 import com.paulo.gestortarefas.features.projects.application.dto.ProjectRequest;
 import com.paulo.gestortarefas.features.projects.application.dto.ProjectResponse;
 import com.paulo.gestortarefas.features.projects.domain.model.Project;
-import com.paulo.gestortarefas.features.projects.domain.ports.inbound.CreateProjectUseCase;
+import com.paulo.gestortarefas.features.projects.domain.ports.inbound.UpdateProjectUseCase;
 import com.paulo.gestortarefas.features.projects.domain.ports.outbound.ProjectRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
-@Service
-public class CreateProjectService implements CreateProjectUseCase {
+public class UpdateProjectService implements UpdateProjectUseCase {
 
     @Autowired
     private ProjectRepository repository;
 
     @Override
-    public ProjectResponse create(ProjectRequest request) {
-        Project project = new Project(null, request.getName(), new Date(), request.getDescription()); // valida name no domínio
-        Project saved = repository.save(project);
+    public ProjectResponse update(Long id, ProjectRequest request) {
+        Project entity = repository.findById(id);
+        BeanUtils.copyProperties(request, entity);
+        Project saved = repository.save(entity);
         return ProjectMapper.toResponse(saved);
     }
 }

@@ -17,7 +17,7 @@ public class Project {
 
     public Project(Long id, String name, Date createdAt, String description) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("name é obrigatório");
+            throw new IllegalArgumentException("o nome é obrigatório");
         }
         this.id = id;
         this.name = name.trim();
