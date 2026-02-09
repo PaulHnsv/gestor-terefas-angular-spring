@@ -1,6 +1,5 @@
 package com.paulo.gestortarefas.features.projects.adapters.inbound.rest;
 
-import com.paulo.gestortarefas.features.projects.adapters.outbound.persistence.ProjectJpaEntity;
 import com.paulo.gestortarefas.features.projects.application.dto.ProjectRequest;
 import com.paulo.gestortarefas.features.projects.application.dto.ProjectResponse;
 import com.paulo.gestortarefas.features.projects.domain.ports.inbound.CreateProjectUseCase;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -23,10 +21,12 @@ public class ProjectController {
     private CreateProjectUseCase createUseCase;
     @Autowired
     private ListProjectsUseCase listUseCase;
-    @Autowired
-    private UpdateProjectUseCase updateProjectUseCase;
+
     @Autowired
     private DeleteProjectUseCase deleteProjectUseCase;
+
+    @Autowired
+    private UpdateProjectUseCase updateProjectUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,7 +49,10 @@ public class ProjectController {
     public ProjectResponse findById(@PathVariable Long id){
         return listUseCase.findById(id);
     }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
+        deleteProjectUseCase.delete(id);
     }
+
 }

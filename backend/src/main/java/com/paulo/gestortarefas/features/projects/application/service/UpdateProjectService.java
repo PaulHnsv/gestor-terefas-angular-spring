@@ -8,7 +8,9 @@ import com.paulo.gestortarefas.features.projects.domain.ports.inbound.UpdateProj
 import com.paulo.gestortarefas.features.projects.domain.ports.outbound.ProjectRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UpdateProjectService implements UpdateProjectUseCase {
 
     @Autowired

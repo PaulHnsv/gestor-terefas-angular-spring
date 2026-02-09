@@ -15,7 +15,7 @@ public class JpaProjectRepository implements ProjectRepository {
 
     @Override
     public Project save(Project project) {
-        ProjectJpaEntity entity = new ProjectJpaEntity(null, project.getName(), project.getCreatedAt(), project.getDescription());
+        ProjectJpaEntity entity = new ProjectJpaEntity(project.getId(), project.getName(), project.getCreatedAt(), project.getDescription());
         ProjectJpaEntity saved = springData.save(entity);
         return new Project(saved.getId(), saved.getName(), saved.getCreatedAt(), saved.getDescription());
     }

@@ -6,7 +6,6 @@ import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProjetoService {
-  // ajuste para o host/porta do seu Spring
   private readonly baseUrl = environment.apiUrl + '/api/projects';
 
   constructor(private http: HttpClient) {}
@@ -15,8 +14,26 @@ export class ProjetoService {
     return this.http.get<ProjectResponse[]>(this.baseUrl);
   }
 
-  create(payload: ProjectRequest): Observable<ProjectRequest> {
-    return this.http.post<ProjectRequest>(this.baseUrl, payload).pipe(
+  create(payload: ProjectRequest): Observable<ProjectResponse> {
+    return this.http.post<ProjectResponse>(this.baseUrl, payload).pipe(
+      catchError((err) => this.handleError(err))
+    );
+  }
+
+  delete(id: string): Observable<ProjectResponse> {
+    return this.http.delete<ProjectResponse>(`${this.baseUrl}/${id}`).pipe(
+      catchError((err) => this.handleError(err))
+    );
+  }
+
+  update(id: string, payload: ProjectRequest): Observable<ProjectResponse> {
+    return this.http.put<ProjectResponse>(`${this.baseUrl}/${id}`, payload).pipe(
+      catchError((err) => this.handleError(err))
+    );
+  }
+
+  get(id: string): Observable<ProjectResponse> {
+    return this.http.get<ProjectResponse>(`${this.baseUrl}/${id}`).pipe(
       catchError((err) => this.handleError(err))
     );
   }
@@ -25,6 +42,6 @@ export class ProjetoService {
     // Aqui você centraliza o parse do erro como quiser
     // Ex: backend retorna { message: "...", fieldErrors: { name: "..." } }
     console.error('Erro na requisição', err);
-    return of({} as ProjectRequest);
+    return of({} as ProjectResponse);
   }
 }

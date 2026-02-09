@@ -1,42 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjetoService } from '../../services/projeto.service';
-import { ProjectResponse } from '../../models/projeto.model';
+import { ProjectRequest, ProjectResponse } from '../../models/projeto.model';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  catchError,
-  map,
-  shareReplay,
-  startWith,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-projetos-list',
   standalone: true,
   templateUrl: './projeto-list.component.html',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
 })
 export class ProjetosListComponent implements OnInit {
+
   projetos$!: Observable<ViewState<ProjectResponse[]>>;
 
   private refresh$ = new BehaviorSubject<void>(undefined);
 
   state: FormState = { status: 'idle', fieldErrors: {} };
 
-  get loading() {
+  showDeleteModal: any;
+  showSearchByIdModal: any;
+  searchId: any;
+  searchResult: any;
+  showEditModal: any;
+  editForm; 
+  form;
+
+    get loading() {
     return this.state.status === 'loading';
   }
-
-  form;
 
   constructor(
     private fb: FormBuilder,
     private projetoService: ProjetoService,
   ) {
     this.form = this.createForm();
+    this.editForm = this.createForm();
   }
 
   private createForm() {
@@ -127,4 +130,69 @@ export class ProjetosListComponent implements OnInit {
       )
       .subscribe();
   }
+
+  /* Modal e ações de busca/exclusão por ID */
+  closeSearchByIdModal() {
+    this.showSearchByIdModal = false;
+  }
+
+  searchProjectById() {
+    this.projetoService.get(this.searchId).subscribe({
+      next: (project) => {
+        this.searchResult = project;
+      },
+      error: () => {
+        this.searchResult = null;
+      },
+    });
+  }
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+  }
+  deleteProjectById() {
+    this.projetoService.delete(this.searchId).subscribe({
+      next: () => {
+        this.refresh$.next();
+        this.closeDeleteModal();
+      },
+      error: () => {
+        // Trate o erro conforme necessário
+      },
+    });
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
+  }
+
+    
+  submitEdit() {
+    const editPayload = {
+      name: (this.editForm.value.nome ?? '').trim(),
+      description: this.editForm.value.descricao?.trim() || null,
+    };
+
+    this.projetoService.update(this.searchId, editPayload).subscribe({
+      next: () => {
+        this.refresh$.next();
+        this.closeEditModal();
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar projeto:', err);
+      },
+    });
+  }
+
+  openEditModal(_t32: ProjectResponse) {
+    this.editForm.setValue({
+      nome: _t32.name,
+      descricao: _t32.description,
+    });
+    this.searchId = _t32.id;
+    this.showEditModal = true;  
+}
+openDeleteModal(_t32: ProjectResponse) {
+  this.searchId = _t32.id;
+  this.showDeleteModal = true;  
+}
 }

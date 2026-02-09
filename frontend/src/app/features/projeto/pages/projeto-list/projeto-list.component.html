@@ -10,6 +10,7 @@
       <th>ID</th>
       <th>Nome</th>
       <th>Descrição</th>
+      <th>ações</th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +20,10 @@
           <td>{{ p?.id }}</td>
           <td>{{ p?.name }}</td>
           <td>{{ p?.description }}</td>
+          <td>
+            <button type="button" (click)="openEditModal(p)">Editar</button>
+            <button type="button" (click)="openDeleteModal(p)">Excluir</button>
+          </td>
         </tr>
         <tr *ngIf="projetos.length === 0">
           <td colspan="3">Nenhum projeto encontrado.</td>
@@ -27,6 +32,55 @@
     </ng-container>
   </tbody>
 </table>
+</ng-container>
+
+<!-- Modal para deletar projeto -->
+<div class="modal" *ngIf="showDeleteModal">
+  <div class="modal-content">
+    <span (click)="closeDeleteModal()" class="close">&times;</span>
+    <h2>Excluir Projeto</h2>
+    <p>Tem certeza que deseja excluir o projeto?</p>
+    <button type="button" (click)="deleteProjectById()">Sim</button>
+    <button type="button" (click)="closeDeleteModal()">Não</button>
+  </div>
+</div>
+
+<!-- Modal para buscar por ID -->
+<div class="modal" *ngIf="showSearchByIdModal">
+  <div class="modal-content">
+    <span (click)="closeSearchByIdModal()" class="close">&times;</span>
+    <h2>Buscar por ID</h2>
+    <input type="text" id="searchById" [(ngModel)]="searchId" placeholder="Digite o ID do projeto" />
+    <button type="button" (click)="searchProjectById()">Buscar</button>
+    <div *ngIf="searchResult">
+      <h3>Resultado da busca:</h3>
+      <p>ID: {{ searchResult?.id }}</p>
+      <p>Nome: {{ searchResult?.name }}</p>
+      <p>Descrição: {{ searchResult?.description }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar projetos -->
+<ng-container *ngIf="state as vm">
+  <div class="modal" *ngIf="showEditModal">
+    <div class="modal-content">  
+      <span (click)="closeEditModal()" class="close">&times;</span>
+      <h2>Editar Projeto</h2>
+      <form [formGroup]="editForm">
+        <div>
+          <label for="editNome">Nome</label><br />
+          <input id="editNome" type="text" formControlName="nome" [disabled]="loading" />
+        </div>
+        <div>
+          <label for="editDescricao">Descrição</label><br />
+          <textarea id="editDescricao" rows="3" formControlName="descricao" [disabled]="loading"></textarea>
+        </div>
+      </form>
+      <button type="button" (click)="submitEdit()" [disabled]="loading">Salvar</button>
+      <button type="button" (click)="closeEditModal()" [disabled]="loading">Cancelar</button>
+    </div>
+  </div>
 
 
 </ng-container>
