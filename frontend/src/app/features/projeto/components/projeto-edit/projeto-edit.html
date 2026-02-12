@@ -1,0 +1,24 @@
+<!-- Modal para editar projetos -->
+
+<div class="modal">
+  <div class="modal-content">
+    <span (click)="close.emit()" class="close">&times;</span>
+    <h2>Editar Projeto</h2>
+
+    <form [formGroup]="editForm">
+      <div>
+        <label>Nome</label><br />
+        <input type="text" formControlName="nome" [ngClass]="project?.name ? 'valid' : 'invalid'"/>
+      </div>
+
+      <div>
+        <label>Descrição</label><br />
+        <textarea rows="3" formControlName="descricao" [ngClass]="project?.description ? 'valid' : 'invalid'"></textarea>
+      </div>
+    </form>
+
+    <button type="button" (click)="submitEdit()">Salvar</button>
+    <button type="button" (click)="close.emit()">Cancelar</button>
+  </div>
+</div>
+

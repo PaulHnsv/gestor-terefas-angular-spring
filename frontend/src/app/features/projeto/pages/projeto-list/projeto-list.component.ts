@@ -1,53 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjetoService } from '../../services/projeto.service';
-import { ProjectRequest, ProjectResponse } from '../../models/projeto.model';
+import { ProjectResponse } from '../../models/projeto.model';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
-import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  of,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { FormsModule } from '@angular/forms';
-
+import { ProjetoCreate } from '../../components/projeto-create/projeto-create';
+import { ProjetoEdit } from '../../components/projeto-edit/projeto-edit';
 
 @Component({
   selector: 'app-projetos-list',
   standalone: true,
   templateUrl: './projeto-list.component.html',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProjetoCreate, ProjetoEdit],
 })
 export class ProjetosListComponent implements OnInit {
-
   projetos$!: Observable<ViewState<ProjectResponse[]>>;
-
-  private refresh$ = new BehaviorSubject<void>(undefined);
-
+  refresh$ = new BehaviorSubject<void>(undefined);
   state: FormState = { status: 'idle', fieldErrors: {} };
 
   showDeleteModal: any;
   showSearchByIdModal: any;
-  searchId: any;
+
   searchResult: any;
-  showEditModal: any;
-  editForm; 
-  form;
+  searchId: any;
 
-    get loading() {
-    return this.state.status === 'loading';
-  }
+  selectedProject: ProjectResponse | null = null;
+  showEditModal = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private projetoService: ProjetoService,
-  ) {
-    this.form = this.createForm();
-    this.editForm = this.createForm();
-  }
-
-  private createForm() {
-    return this.fb.group({
-      nome: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
-      descricao: [''],
-    });
-  }
+  constructor(private projetoService: ProjetoService) {}
 
   ngOnInit(): void {
     this.carregar();
@@ -70,65 +60,6 @@ export class ProjetosListComponent implements OnInit {
       ),
       shareReplay(1),
     );
-  }
-
-  get nameCtrl() {
-    return this.form.controls.nome;
-  }
-
-  submit(): void {
-    this.state = { status: 'idle', fieldErrors: {} };
-
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      this.state = {
-        status: 'error',
-        errorMessage: 'Corrija os campos obrigatórios.',
-        fieldErrors: {},
-      };
-      return;
-    }
-
-    const payload = {
-      name: (this.form.value.nome ?? '').trim(),
-      description: this.form.value.descricao?.trim() || null,
-    };
-
-    this.state = { status: 'loading', fieldErrors: {} };
-
-    this.projetoService
-      .create(payload)
-      .pipe(
-        tap((created) => {
-          this.form.reset({ nome: '', descricao: '' });
-          this.refresh$.next();
-          this.state = {
-            status: 'success',
-            successMessage: `Projeto criado: ${created.name}`,
-            fieldErrors: {},
-          };
-        }),
-        catchError((err) => {
-          const body = err?.error;
-
-          if (body?.fieldErrors) {
-            this.state = {
-              status: 'error',
-              errorMessage: body.message || 'Erro de validação.',
-              fieldErrors: body.fieldErrors,
-            };
-            return EMPTY;
-          }
-
-          this.state = {
-            status: 'error',
-            errorMessage: body?.message || 'Falha ao criar projeto.',
-            fieldErrors: {},
-          };
-          return EMPTY;
-        }),
-      )
-      .subscribe();
   }
 
   /* Modal e ações de busca/exclusão por ID */
@@ -161,38 +92,19 @@ export class ProjetosListComponent implements OnInit {
     });
   }
 
+  openDeleteModal(project: ProjectResponse) {
+    this.searchId = project.id;
+    this.showDeleteModal = true;
+  }
+
+  openEditModal(project: ProjectResponse) {
+    console.log('Projeto selecionado para edição:', project);
+    this.selectedProject = project;
+    this.showEditModal = true;
+  }
+
   closeEditModal() {
     this.showEditModal = false;
+    this.selectedProject = null;
   }
-
-    
-  submitEdit() {
-    const editPayload = {
-      name: (this.editForm.value.nome ?? '').trim(),
-      description: this.editForm.value.descricao?.trim() || null,
-    };
-
-    this.projetoService.update(this.searchId, editPayload).subscribe({
-      next: () => {
-        this.refresh$.next();
-        this.closeEditModal();
-      },
-      error: (err) => {
-        console.error('Erro ao atualizar projeto:', err);
-      },
-    });
-  }
-
-  openEditModal(_t32: ProjectResponse) {
-    this.editForm.setValue({
-      nome: _t32.name,
-      descricao: _t32.description,
-    });
-    this.searchId = _t32.id;
-    this.showEditModal = true;  
-}
-openDeleteModal(_t32: ProjectResponse) {
-  this.searchId = _t32.id;
-  this.showDeleteModal = true;  
-}
 }

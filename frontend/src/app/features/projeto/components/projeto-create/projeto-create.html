@@ -1,0 +1,50 @@
+<h2>Criar projeto</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <ng-container *ngIf="state as vm">
+    <div style="margin-bottom: 12px;">
+      <label for="nome">Nome *</label><br />
+      <input
+        id="nome"
+        type="text"
+        formControlName="nome"
+        [disabled]="loading"
+      />
+
+      <div style="color: #b00020; margin-top: 6px;" *ngIf="nameCtrl.touched && nameCtrl.invalid">
+        <div *ngIf="nameCtrl.errors?.['required']">Nome é obrigatório.</div>
+        <div *ngIf="nameCtrl.errors?.['minlength']">Mínimo de 2 caracteres.</div>
+        <div *ngIf="nameCtrl.errors?.['maxlength']">Máximo de 80 caracteres.</div>
+      </div>
+
+      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['name']">
+        {{ state.fieldErrors?.['name'] }}
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px;">
+      <label for="descricao">Descrição</label><br />
+      <textarea
+        id="descricao"
+        rows="3"
+        formControlName="descricao"
+        [disabled]="state.status === 'loading'"
+      ></textarea>
+
+      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['description']">
+        {{ state.fieldErrors?.['description'] }}
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="state.status === 'loading'">
+      {{ state.status === 'loading' ? 'Criando...' : 'Criar projeto' }}
+    </button>
+
+    <div style="margin-top: 12px; color: #1b5e20;" *ngIf="state.status === 'success'">
+      {{ state.successMessage }}
+    </div>
+
+    <div style="margin-top: 12px; color: #b00020;" *ngIf="state.status === 'error'">
+      {{ state.errorMessage }}
+    </div>
+  </ng-container>
+</form>

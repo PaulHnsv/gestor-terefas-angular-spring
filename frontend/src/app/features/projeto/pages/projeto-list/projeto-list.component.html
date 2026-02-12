@@ -14,9 +14,8 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngIf="projetos$ | async as viewState">
-      <ng-container *ngIf="viewState.status === 'success' && viewState.data as projetos">
-        <tr *ngFor="let p of projetos">
+    
+        <tr *ngFor="let p of p.data">
           <td>{{ p?.id }}</td>
           <td>{{ p?.name }}</td>
           <td>{{ p?.description }}</td>
@@ -25,11 +24,10 @@
             <button type="button" (click)="openDeleteModal(p)">Excluir</button>
           </td>
         </tr>
-        <tr *ngIf="projetos.length === 0">
+        <tr *ngIf="p.data.length === 0">
           <td colspan="3">Nenhum projeto encontrado.</td>
         </tr>
-      </ng-container>
-    </ng-container>
+
   </tbody>
 </table>
 </ng-container>
@@ -61,78 +59,11 @@
   </div>
 </div>
 
-<!-- Modal para editar projetos -->
-<ng-container *ngIf="state as vm">
-  <div class="modal" *ngIf="showEditModal">
-    <div class="modal-content">  
-      <span (click)="closeEditModal()" class="close">&times;</span>
-      <h2>Editar Projeto</h2>
-      <form [formGroup]="editForm">
-        <div>
-          <label for="editNome">Nome</label><br />
-          <input id="editNome" type="text" formControlName="nome" [disabled]="loading" />
-        </div>
-        <div>
-          <label for="editDescricao">Descrição</label><br />
-          <textarea id="editDescricao" rows="3" formControlName="descricao" [disabled]="loading"></textarea>
-        </div>
-      </form>
-      <button type="button" (click)="submitEdit()" [disabled]="loading">Salvar</button>
-      <button type="button" (click)="closeEditModal()" [disabled]="loading">Cancelar</button>
-    </div>
-  </div>
-
-
-</ng-container>
-
-<h2>Criar projeto</h2>
-
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <ng-container *ngIf="state as vm">
-    <div style="margin-bottom: 12px;">
-      <label for="nome">Nome *</label><br />
-      <input
-        id="nome"
-        type="text"
-        formControlName="nome"
-        [disabled]="loading"
-      />
-
-      <div style="color: #b00020; margin-top: 6px;" *ngIf="nameCtrl.touched && nameCtrl.invalid">
-        <div *ngIf="nameCtrl.errors?.['required']">Nome é obrigatório.</div>
-        <div *ngIf="nameCtrl.errors?.['minlength']">Mínimo de 2 caracteres.</div>
-        <div *ngIf="nameCtrl.errors?.['maxlength']">Máximo de 80 caracteres.</div>
-      </div>
-
-      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['name']">
-        {{ state.fieldErrors?.['name'] }}
-      </div>
-    </div>
-
-    <div style="margin-bottom: 12px;">
-      <label for="descricao">Descrição</label><br />
-      <textarea
-        id="descricao"
-        rows="3"
-        formControlName="descricao"
-        [disabled]="state.status === 'loading'"
-      ></textarea>
-
-      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['description']">
-        {{ state.fieldErrors?.['description'] }}
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="state.status === 'loading'">
-      {{ state.status === 'loading' ? 'Criando...' : 'Criar projeto' }}
-    </button>
-
-    <div style="margin-top: 12px; color: #1b5e20;" *ngIf="state.status === 'success'">
-      {{ state.successMessage }}
-    </div>
-
-    <div style="margin-top: 12px; color: #b00020;" *ngIf="state.status === 'error'">
-      {{ state.errorMessage }}
-    </div>
-  </ng-container>
-</form>
+<!-- importar component projeto create para cá e consiga utiliza o component nessa tela aqui-->
+<app-projeto-create  (created)="refresh$.next()"></app-projeto-create>
+<!-- importar component projeto edit para cá e consiga utiliza o component nessa tela aqui-->
+<app-projeto-edit   *ngIf="showEditModal"
+  [project]="selectedProject"
+  (updated)="refresh$.next()"
+  (close)="closeEditModal()"></app-projeto-edit>
+  
