@@ -16,25 +16,25 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ProjetoCreate } from '../../components/projeto-create/projeto-create';
 import { ProjetoEdit } from '../../components/projeto-edit/projeto-edit';
+import { ProjetoDelete } from '../../components/projeto-delete/projeto-delete';
 
 @Component({
   selector: 'app-projetos-list',
   standalone: true,
   templateUrl: './projeto-list.component.html',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProjetoCreate, ProjetoEdit],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProjetoCreate, ProjetoEdit, ProjetoDelete],
 })
 export class ProjetosListComponent implements OnInit {
+
   projetos$!: Observable<ViewState<ProjectResponse[]>>;
   refresh$ = new BehaviorSubject<void>(undefined);
   state: FormState = { status: 'idle', fieldErrors: {} };
 
-  showDeleteModal: any;
+  showDeleteModal = false;
   showSearchByIdModal: any;
 
-  searchResult: any;
-  searchId: any;
-
   selectedProject: ProjectResponse | null = null;
+  projectIdToDelete: string | null = null;
   showEditModal = false;
 
   constructor(private projetoService: ProjetoService) {}
@@ -62,49 +62,23 @@ export class ProjetosListComponent implements OnInit {
     );
   }
 
-  /* Modal e ações de busca/exclusão por ID */
-  closeSearchByIdModal() {
-    this.showSearchByIdModal = false;
-  }
-
-  searchProjectById() {
-    this.projetoService.get(this.searchId).subscribe({
-      next: (project) => {
-        this.searchResult = project;
-      },
-      error: () => {
-        this.searchResult = null;
-      },
-    });
-  }
-  closeDeleteModal() {
-    this.showDeleteModal = false;
-  }
-  deleteProjectById() {
-    this.projetoService.delete(this.searchId).subscribe({
-      next: () => {
-        this.refresh$.next();
-        this.closeDeleteModal();
-      },
-      error: () => {
-        // Trate o erro conforme necessário
-      },
-    });
-  }
-
-  openDeleteModal(project: ProjectResponse) {
-    this.searchId = project.id;
+  openDeleteModal(projectId: string) {
+    this.projectIdToDelete = projectId;
     this.showDeleteModal = true;
   }
 
   openEditModal(project: ProjectResponse) {
-    console.log('Projeto selecionado para edição:', project);
     this.selectedProject = project;
     this.showEditModal = true;
   }
 
   closeEditModal() {
     this.showEditModal = false;
+    this.selectedProject = null;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
     this.selectedProject = null;
   }
 }

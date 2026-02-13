@@ -21,7 +21,7 @@
           <td>{{ p?.description }}</td>
           <td>
             <button type="button" (click)="openEditModal(p)">Editar</button>
-            <button type="button" (click)="openDeleteModal(p)">Excluir</button>
+            <button type="button" (click)="openDeleteModal(p.id)">Excluir</button>
           </td>
         </tr>
         <tr *ngIf="p.data.length === 0">
@@ -32,38 +32,15 @@
 </table>
 </ng-container>
 
-<!-- Modal para deletar projeto -->
-<div class="modal" *ngIf="showDeleteModal">
-  <div class="modal-content">
-    <span (click)="closeDeleteModal()" class="close">&times;</span>
-    <h2>Excluir Projeto</h2>
-    <p>Tem certeza que deseja excluir o projeto?</p>
-    <button type="button" (click)="deleteProjectById()">Sim</button>
-    <button type="button" (click)="closeDeleteModal()">Não</button>
-  </div>
-</div>
-
-<!-- Modal para buscar por ID -->
-<div class="modal" *ngIf="showSearchByIdModal">
-  <div class="modal-content">
-    <span (click)="closeSearchByIdModal()" class="close">&times;</span>
-    <h2>Buscar por ID</h2>
-    <input type="text" id="searchById" [(ngModel)]="searchId" placeholder="Digite o ID do projeto" />
-    <button type="button" (click)="searchProjectById()">Buscar</button>
-    <div *ngIf="searchResult">
-      <h3>Resultado da busca:</h3>
-      <p>ID: {{ searchResult?.id }}</p>
-      <p>Nome: {{ searchResult?.name }}</p>
-      <p>Descrição: {{ searchResult?.description }}</p>
-    </div>
-  </div>
-</div>
-
-<!-- importar component projeto create para cá e consiga utiliza o component nessa tela aqui-->
 <app-projeto-create  (created)="refresh$.next()"></app-projeto-create>
-<!-- importar component projeto edit para cá e consiga utiliza o component nessa tela aqui-->
+
 <app-projeto-edit   *ngIf="showEditModal"
   [project]="selectedProject"
   (updated)="refresh$.next()"
   (close)="closeEditModal()"></app-projeto-edit>
+
+<app-projeto-delete *ngIf="showDeleteModal"
+  [projectId]="projectIdToDelete"
+  (deleted)="refresh$.next()"
+  (close)="closeDeleteModal()"></app-projeto-delete>
   

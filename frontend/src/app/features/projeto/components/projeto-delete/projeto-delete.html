@@ -1,1 +1,9 @@
-<p>projeto-delete works!</p>
+<div class="modal">
+  <div class="modal-content">
+    <span (click)="close.emit()" class="close">&times;</span>
+    <h2>Excluir Projeto</h2>
+    <p>Tem certeza que deseja excluir o projeto?</p>
+    <button type="button" (click)="deleteProjectById()">Sim</button>
+    <button type="button" (click)="close.emit()">Não</button>
+  </div>
+</div>
