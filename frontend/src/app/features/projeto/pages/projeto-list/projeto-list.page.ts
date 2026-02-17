@@ -21,7 +21,7 @@ import { ProjetoDelete } from '../../components/projeto-delete/projeto-delete';
 @Component({
   selector: 'app-projetos-list',
   standalone: true,
-  templateUrl: './projeto-list.component.html',
+  templateUrl: './projeto-list.page.html',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, ProjetoCreate, ProjetoEdit, ProjetoDelete],
 })
 export class ProjetosListComponent implements OnInit {
