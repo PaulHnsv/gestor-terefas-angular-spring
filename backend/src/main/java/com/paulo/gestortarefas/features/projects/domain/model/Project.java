@@ -26,10 +26,9 @@ public class Project {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Project)) return false;
-        Project project = (Project) o;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Project project)) return false;
         return Objects.equals(id, project.id);
     }
 

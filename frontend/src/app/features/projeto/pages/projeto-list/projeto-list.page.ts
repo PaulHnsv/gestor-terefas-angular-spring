@@ -14,9 +14,9 @@ import {
   switchMap,
 } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { ProjetoCreate } from '../../components/projeto-create/projeto-create';
-import { ProjetoEdit } from '../../components/projeto-edit/projeto-edit';
-import { ProjetoDelete } from '../../components/projeto-delete/projeto-delete';
+import { ProjetoCreate } from '../../components/projeto-create/projeto-create.component';
+import { ProjetoEdit } from '../../components/projeto-edit/projeto-edit.component';
+import { ProjetoDelete } from '../../components/projeto-delete/projeto-delete.component';
 
 @Component({
   selector: 'app-projetos-list',
@@ -24,7 +24,7 @@ import { ProjetoDelete } from '../../components/projeto-delete/projeto-delete';
   templateUrl: './projeto-list.page.html',
   imports: [CommonModule, ReactiveFormsModule, FormsModule, ProjetoCreate, ProjetoEdit, ProjetoDelete],
 })
-export class ProjetosListComponent implements OnInit {
+export class ProjetosListPage implements OnInit {
 
   projetos$!: Observable<ViewState<ProjectResponse[]>>;
   refresh$ = new BehaviorSubject<void>(undefined);

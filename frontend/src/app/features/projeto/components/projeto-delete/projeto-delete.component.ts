@@ -6,8 +6,8 @@ import { CommonModule } from 'node_modules/@angular/common/types/_common_module-
 @Component({
   standalone: true,
   selector: 'app-projeto-delete',
-  templateUrl: './projeto-delete.html',
-  styleUrl: './projeto-delete.scss',
+  templateUrl: './projeto-delete.component.html',
+  styleUrl: './projeto-delete.component.scss',
 })
 export class ProjetoDelete {
   @Input() projectId: string | null = null;

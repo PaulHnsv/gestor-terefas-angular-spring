@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './home.component.html',
+  templateUrl: './home.page.html',
 })
-export class HomeComponent implements OnInit {
+export class HomePage implements OnInit {
 
 ping$!: Observable<{ message: string; timestamp: string }>;
 versionInfo$!: Observable<{ version: string; name: string; timestamp: string }>;

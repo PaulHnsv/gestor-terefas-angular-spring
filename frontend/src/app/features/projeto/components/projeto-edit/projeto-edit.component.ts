@@ -8,8 +8,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   selector: 'app-projeto-edit',
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './projeto-edit.html',
-  styleUrl: './projeto-edit.scss',
+  templateUrl: './projeto-edit.component.html',
+  styleUrl: './projeto-edit.component.scss',
 })
 export class ProjetoEdit implements OnInit {
 @Input() project: ProjectResponse | null = null;

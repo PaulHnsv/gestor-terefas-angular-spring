@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   selector: 'app-projeto-create',
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './projeto-create.html',
-  styleUrl: './projeto-create.scss',
+  templateUrl: './projeto-create.component.html',
+  styleUrl: './projeto-create.component.scss',
 })
 export class ProjetoCreate implements OnInit {
 @Output() created = new EventEmitter<void>();
