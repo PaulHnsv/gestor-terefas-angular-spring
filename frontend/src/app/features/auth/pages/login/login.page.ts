@@ -18,7 +18,7 @@ export class Login {
   constructor(private fb: FormBuilder, private authService: AuthService,
   private router: Router) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
   }
@@ -27,7 +27,7 @@ onSubmit() {
   if (this.loginForm.valid) {
     this.authService.login(this.loginForm.value as LoginRequest)
       .subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => this.router.navigate(['/home']),
         error: () => alert('Login inválido')
       });
   }

@@ -21,6 +21,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        System.out.println(request);
 
         // aqui você valida usuário no banco
         String token = jwtService.generateToken(request.getUsername());

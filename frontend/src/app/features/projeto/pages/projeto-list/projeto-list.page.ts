@@ -68,6 +68,7 @@ export class ProjetosListPage implements OnInit {
   }
 
   openEditModal(project: ProjectResponse) {
+    console.log('Projeto selecionado para edição:', project);
     this.selectedProject = project;
     this.showEditModal = true;
   }

@@ -1,9 +1,21 @@
-<div class="modal">
-  <div class="modal-content">
-    <span (click)="close.emit()" class="close">&times;</span>
-    <h2>Excluir Projeto</h2>
-    <p>Tem certeza que deseja excluir o projeto?</p>
-    <button type="button" (click)="deleteProjectById()">Sim</button>
-    <button type="button" (click)="close.emit()">Não</button>
+<div class="modal-backdrop fade show"></div>
+
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Excluir Projeto</h5>
+        <button type="button" class="btn-close" (click)="close.emit()"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir o projeto?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="deleteProjectById()">Sim</button>
+        <button type="button" class="btn btn-secondary" (click)="close.emit()">Não</button>
+      </div>
+    </div>
   </div>
 </div>

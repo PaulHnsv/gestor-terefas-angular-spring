@@ -1,6 +1,9 @@
 package com.paulo.gestortarefas.config;
 
+import com.paulo.gestortarefas.infra.persistence.security.CustomUserDetailsService;
 import com.paulo.gestortarefas.infra.web.security.JwtAuthenticationFilter;
+import com.paulo.gestortarefas.shared.security.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,10 +20,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtFilter;
-
-    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(
+            JwtService jwtService,
+            CustomUserDetailsService userDetailsService
+    ) {
+        return new JwtAuthenticationFilter(jwtService, userDetailsService);
     }
 
     @Bean
@@ -29,13 +34,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 
         return http
                 .cors(Customizer.withDefaults())
-
-                // mantém seu comportamento atual
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/h2/**"))
+                .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(sess ->
                         sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -44,13 +47,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/h2/**").permitAll()
-
-                        // 🔐 LIBERADO só login
                         .requestMatchers("/auth/**").permitAll()
-
-                        // 🔐 PROTEGIDO
                         .requestMatchers("/api/**").authenticated()
-
                         .anyRequest().authenticated()
                 )
 
@@ -60,7 +58,7 @@ public class SecurityConfig {
                 )
 
                 // adiciona JWT antes do filtro padrão
-                .addFilterBefore(jwtFilter,
+                .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
 
                 .build();

@@ -1,24 +1,40 @@
 <!-- Modal para editar projetos -->
+<div class="modal-backdrop fade show"></div>
 
-<div class="modal">
-  <div class="modal-content">
-    <span (click)="close.emit()" class="close">&times;</span>
-    <h2>Editar Projeto</h2>
-
-    <form [formGroup]="editForm">
-      <div>
-        <label>Nome</label><br />
-        <input type="text" formControlName="nome" [ngClass]="project?.name ? 'valid' : 'invalid'"/>
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Projeto</h5>
+        <button type="button" class="btn-close" (click)="close.emit()"></button>
       </div>
 
-      <div>
-        <label>Descrição</label><br />
-        <textarea rows="3" formControlName="descricao" [ngClass]="project?.description ? 'valid' : 'invalid'"></textarea>
-      </div>
-    </form>
+      <div class="modal-body">
+        <form [formGroup]="editForm">
+          <div>
+            <label>Nome</label><br />
+            <input
+              type="text"
+              formControlName="nome"
+              [ngClass]="project?.name ? 'valid' : 'invalid'"
+            />
+          </div>
 
-    <button type="button" (click)="submitEdit()">Salvar</button>
-    <button type="button" (click)="close.emit()">Cancelar</button>
+          <div>
+            <label>Descrição</label><br />
+            <textarea
+              rows="3"
+              formControlName="descricao"
+              [ngClass]="project?.description ? 'valid' : 'invalid'"
+            ></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="close.emit()">Cancelar</button>
+        <button class="btn btn-primary" (click)="submitEdit()">Salvar</button>
+      </div>
+    </div>
   </div>
 </div>
-
