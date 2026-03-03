@@ -2,6 +2,7 @@ package com.paulo.gestortarefas.features.projects.domain.model;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,17 +13,21 @@ public class Project {
 
     private Long id;
     private String name;
-    private Date createdAt;
+    private LocalDateTime createdAt;
     private String description;
 
-    public Project(Long id, String name, Date createdAt, String description) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("o nome é obrigatório");
-        }
+    public Project(Long id, String name, LocalDateTime createdAt, String description) {
+        validateName(name);
         this.id = id;
         this.name = name.trim();
         this.createdAt = createdAt;
         this.description = description;
+    }
+
+    private void validateName(String name){
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("o nome é obrigatório");
+        }
     }
 
     @Override

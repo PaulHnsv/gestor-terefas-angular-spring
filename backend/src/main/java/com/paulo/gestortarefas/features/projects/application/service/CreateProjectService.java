@@ -9,7 +9,7 @@ import com.paulo.gestortarefas.features.projects.domain.ports.outbound.ProjectRe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 public class CreateProjectService implements CreateProjectUseCase {
@@ -19,7 +19,7 @@ public class CreateProjectService implements CreateProjectUseCase {
 
     @Override
     public ProjectResponse create(ProjectRequest request) {
-        Project project = new Project(null, request.getName(), new Date(), request.getDescription()); // valida name no domínio
+        Project project = new Project(null, request.getName(), LocalDateTime.now(), request.getDescription()); // valida name no domínio
         Project saved = repository.save(project);
         return ProjectMapper.toResponse(saved);
     }
