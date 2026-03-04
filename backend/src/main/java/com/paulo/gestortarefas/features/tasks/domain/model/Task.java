@@ -1,8 +1,12 @@
 package com.paulo.gestortarefas.features.tasks.domain.model;
 
 import com.paulo.gestortarefas.features.projects.adapters.outbound.persistence.ProjectJpaEntity;
+import com.paulo.gestortarefas.features.projects.domain.model.Project;
 import com.paulo.gestortarefas.shared.utils.Priority;
 import com.paulo.gestortarefas.shared.utils.Status;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,11 +25,11 @@ public class Task {
     private Status status;
     private LocalDateTime createdAt;
     private String description;
-    private ProjectJpaEntity project;
+    private Project project;
     private LocalDateTime completedAt;
 
-    public Task(Long id, String title, Priority priority, Status status, LocalDateTime createdAt, String description, ProjectJpaEntity project, LocalDateTime completedAt) {
-        validateTitle(title);
+    public Task(Long id, String title, Priority priority, Status status, LocalDateTime createdAt, String description, Project project, LocalDateTime completedAt) {
+
         this.id = id;
         this.title = title;
         this.priority = priority;
@@ -34,6 +38,15 @@ public class Task {
         this.description = description;
         this.project = project;
         this.completedAt = completedAt;
+    }
+
+    public Task(String title, Priority priority, Status status, String description, Project project) {
+        validateTitle(title);
+        this.title = title;
+        this.priority = priority;
+        this.status = status;
+        this.description = description;
+        this.project = project;
     }
 
     public void concludeTask() {

@@ -21,19 +21,16 @@ public class TaskJpaEntity {
     @Column(nullable = false)
     private String title;
 
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Priority priority;
 
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
 
-    @Column
     private LocalDateTime createdAt;
 
-    @Column
     private LocalDateTime completedAt;
 
-    @Column
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

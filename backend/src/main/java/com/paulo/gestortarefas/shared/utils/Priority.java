@@ -22,14 +22,14 @@ public enum Priority {
         this.description = description;
     }
 
-    @JsonValue
     public int getCode() { return code; }
+    public String getDescription(){ return description; }
 
-    @JsonCreator
     public static Priority fromCode(int code) {
         return Arrays.stream(values())
                 .filter(s -> s.getCode() == code)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Código inválido: " + code));
     }
+
 }
