@@ -13,8 +13,6 @@ public interface TaskMapper {
 
     List<TaskResponse> toResponseList(List<Task> tasks);
 
-    TaskRequest toRequest(Task task);
-
     // Domínio → Entity (para persistir)
     TaskJpaEntity toEntity(Task task);
 

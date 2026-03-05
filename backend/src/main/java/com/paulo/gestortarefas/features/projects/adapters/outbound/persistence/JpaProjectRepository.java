@@ -1,17 +1,22 @@
 package com.paulo.gestortarefas.features.projects.adapters.outbound.persistence;
 
+import com.paulo.gestortarefas.features.projects.application.dto.ProjectMapper;
 import com.paulo.gestortarefas.features.projects.domain.model.Project;
 import com.paulo.gestortarefas.features.projects.domain.ports.outbound.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JpaProjectRepository implements ProjectRepository {
 
     @Autowired
     private SpringDataProjectRepository springData;
+
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Override
     public Project save(Project project) {
@@ -28,12 +33,9 @@ public class JpaProjectRepository implements ProjectRepository {
                 .toList();
     }
 
-    public Project findById(long id) {
+    public Optional<Project> findById(long id) {
         return springData.findById(id)
-                .map(entity -> new Project(
-                entity.getId(), entity.getName(), entity.getCreatedAt(), entity.getDescription()))
-                .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado com id: " + id));
-
+                .map(entity -> projectMapper.toDomain(entity));
     }
 
     @Override

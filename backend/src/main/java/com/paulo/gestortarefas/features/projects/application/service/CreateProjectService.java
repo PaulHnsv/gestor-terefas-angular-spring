@@ -17,10 +17,17 @@ public class CreateProjectService implements CreateProjectUseCase {
     @Autowired
     private ProjectRepository repository;
 
+    @Autowired
+    private ProjectMapper projectMapper;
+
     @Override
     public ProjectResponse create(ProjectRequest request) {
-        Project project = new Project(null, request.getName(), LocalDateTime.now(), request.getDescription()); // valida name no domínio
+        Project project = new Project(
+                null,
+                request.getName(),
+                LocalDateTime.now(),
+                request.getDescription());
         Project saved = repository.save(project);
-        return ProjectMapper.toResponse(saved);
+        return projectMapper.toResponse(saved);
     }
 }
