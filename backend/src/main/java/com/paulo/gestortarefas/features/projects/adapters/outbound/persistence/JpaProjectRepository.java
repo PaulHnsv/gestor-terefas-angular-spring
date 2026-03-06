@@ -20,26 +20,25 @@ public class JpaProjectRepository implements ProjectRepository {
 
     @Override
     public Project save(Project project) {
-        ProjectJpaEntity entity = new ProjectJpaEntity(project.getId(), project.getName(), project.getCreatedAt(), project.getDescription());
+        ProjectJpaEntity entity = projectMapper.toEntity(project);
         ProjectJpaEntity saved = springData.save(entity);
-        return new Project(saved.getId(), saved.getName(), saved.getCreatedAt(), saved.getDescription());
+        return projectMapper.toDomain(saved);
     }
 
     @Override
     public List<Project> findAll() {
-        return springData.findAll()
-                .stream()
-                .map(e -> new Project(e.getId(), e.getName(), e.getCreatedAt(), e.getDescription()))
+        return springData.findAll().stream()
+                .map(e -> projectMapper.toDomain(e))
                 .toList();
     }
 
-    public Optional<Project> findById(long id) {
+    public Optional<Project> findById(Long id) {
         return springData.findById(id)
                 .map(entity -> projectMapper.toDomain(entity));
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         springData.deleteById(id);
     }
 }

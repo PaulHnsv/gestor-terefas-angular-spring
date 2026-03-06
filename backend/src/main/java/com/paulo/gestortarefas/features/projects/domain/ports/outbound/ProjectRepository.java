@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface ProjectRepository {
     Project save(Project project);
     List<Project> findAll();
-    Optional<Project> findById(long id);
-    void delete(long id);
+    Optional<Project> findById(Long id);
+    void delete(Long id);
 }
