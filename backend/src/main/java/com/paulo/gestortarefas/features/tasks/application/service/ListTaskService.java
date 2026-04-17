@@ -1,6 +1,5 @@
 package com.paulo.gestortarefas.features.tasks.application.service;
 
-import com.paulo.gestortarefas.features.projects.domain.model.Project;
 import com.paulo.gestortarefas.features.tasks.application.dto.TaskMapper;
 import com.paulo.gestortarefas.features.tasks.application.dto.TaskResponse;
 import com.paulo.gestortarefas.features.tasks.domain.model.Task;
@@ -12,6 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -38,11 +41,16 @@ public class ListTaskService implements ListTasksUseCase {
     }
 
     @Override
-    public TaskResponse findByProjectId(Long id) {
-        Task task = repository.findByProjectId(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Tarefa não encontrada"
-        ));;
-        return taskMapper.toResponse(task);
+    public List<TaskResponse> findByProjectId(Long id) {
+        List<Task> tasks = repository.findByProjectId(id).stream()
+                .flatMap(Optional::stream) // Java 9+
+                .toList();
+
+        if (tasks.isEmpty())
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Tarefas não encontradas");
+
+        return taskMapper.toResponseList(tasks);
+
     }
 }

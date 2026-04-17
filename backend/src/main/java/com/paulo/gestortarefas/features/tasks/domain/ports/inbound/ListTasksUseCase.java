@@ -7,5 +7,5 @@ import java.util.List;
 public interface ListTasksUseCase {
     List<TaskResponse> list();
     TaskResponse findById(Long id);
-    TaskResponse findByProjectId(Long id);
+    List<TaskResponse> findByProjectId(Long id);
 }

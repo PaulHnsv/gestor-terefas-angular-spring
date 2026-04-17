@@ -1,12 +1,8 @@
 package com.paulo.gestortarefas.features.tasks.domain.model;
 
-import com.paulo.gestortarefas.features.projects.adapters.outbound.persistence.ProjectJpaEntity;
 import com.paulo.gestortarefas.features.projects.domain.model.Project;
 import com.paulo.gestortarefas.shared.utils.Priority;
 import com.paulo.gestortarefas.shared.utils.Status;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

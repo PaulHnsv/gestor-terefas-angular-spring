@@ -9,6 +9,6 @@ public interface TaskRepository {
     Task save(Task task);
     List<Task> findAll();
     Optional<Task> findById(Long id);
-    Optional<Task> findByProjectId(Long id);
+    List<Optional<Task>> findByProjectId(Long id);
     void delete(Long id);
 }

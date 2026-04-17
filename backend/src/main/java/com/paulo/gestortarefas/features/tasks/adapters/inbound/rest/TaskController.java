@@ -1,7 +1,5 @@
 package com.paulo.gestortarefas.features.tasks.adapters.inbound.rest;
 
-import com.paulo.gestortarefas.features.projects.application.dto.ProjectRequest;
-import com.paulo.gestortarefas.features.projects.application.dto.ProjectResponse;
 import com.paulo.gestortarefas.features.tasks.application.dto.TaskRequest;
 import com.paulo.gestortarefas.features.tasks.application.dto.TaskResponse;
 import com.paulo.gestortarefas.features.tasks.domain.ports.inbound.*;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/Tasks")
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     @Autowired
@@ -40,6 +38,11 @@ public class TaskController {
     @GetMapping
     public List<TaskResponse> list() {
         return list.list();
+    }
+
+    @GetMapping("/{idProject}")
+    public List<TaskResponse> listByProjectId(@PathVariable Long idProject){
+        return list.findByProjectId(idProject);
     }
 
     @PutMapping("/{id}")

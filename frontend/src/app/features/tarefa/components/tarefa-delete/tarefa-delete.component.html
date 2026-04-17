@@ -1,0 +1,21 @@
+<div class="modal-backdrop fade show"></div>
+
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Excluir Tarefa</h5>
+        <button type="button" class="btn-close" (click)="close.emit()"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir a tarefa?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="deleteTarefaById()">Sim</button>
+        <button type="button" class="btn btn-secondary" (click)="close.emit()">Não</button>
+      </div>
+    </div>
+  </div>
+</div>
