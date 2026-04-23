@@ -1,4 +1,1 @@
-export interface Status {
-    code: '1' | '2' | '3';
-    description: 'Pendente' | 'Em Andamento' | 'Concluída';
-}
+export type Status = 1 | 2 | 3;

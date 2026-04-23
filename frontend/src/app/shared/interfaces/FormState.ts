@@ -1,5 +1,7 @@
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+
 interface FormState {
-  status: Status;
+  status: FormStatus;
   successMessage?: string;
   errorMessage?: string;
   fieldErrors?: Record<string, string>;

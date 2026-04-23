@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   BehaviorSubject,
   catchError,
+  combineLatest,
   map,
   Observable,
   of,
@@ -25,9 +26,12 @@ import { TarefaDelete } from '../../components/tarefa-delete/tarefa-delete.compo
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TarefaDelete, TarefaCreate, TarefaEdit],
 })
 export class TarefasListPage implements OnInit {
-
   tarefas$!: Observable<ViewState<TaskResponse[]>>;
+  tarefasFiltradas$!: Observable<ViewState<TaskResponse[]>>;
+
   refresh$ = new BehaviorSubject<void>(undefined);
+  statusFiltro$ = new BehaviorSubject<number>(0);
+
   state: FormState = { status: 'idle', fieldErrors: {} };
 
   showDeleteModal = false;
@@ -59,6 +63,20 @@ export class TarefasListPage implements OnInit {
         ),
       ),
       shareReplay(1),
+    );
+
+    this.tarefasFiltradas$ = combineLatest([this.tarefas$, this.statusFiltro$]).pipe(
+      map(([viewState, filtro]) => {
+        if (viewState.status !== 'success') return viewState;
+
+        const filtradas =
+          filtro === 0
+            ? viewState.data
+            : viewState.data.filter((t) => t.status === filtro);
+
+        // Devolve um novo ViewState com os dados filtrados
+        return { ...viewState, data: filtradas };
+      }),
     );
   }
 

@@ -1,46 +1,56 @@
 <h2>Tarefas</h2>
 
-<ng-container *ngIf="tarefas$ | async as t">
+<ng-container *ngIf="tarefasFiltradas$ | async as t">
   <div *ngIf="t.status === 'loading'">Carregando...</div>
-  <div *ngIf="t.status === 'error'" style="color: red;">{{ t.message }}</div>
+  <div *ngIf="t.status === 'error'" style="color: red">{{ t.message }}</div>
+
+  <select (change)="statusFiltro$.next($any($event.target).value)">
+    <option value=0>Todos</option>
+    <option value=1>Pendente</option>
+    <option value=2>Em andamento</option>
+    <option value=3>Concluída</option>
+  </select>
 
   <table *ngIf="t.status === 'success'" border="1" cellpadding="8" cellspacing="0">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Titulo</th>
-      <th>Descrição</th>
-      <th>ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    
-        <tr *ngFor="let t of t.data">
-          <td>{{ t?.id }}</td>
-          <td>{{ t?.title }}</td>
-          <td>{{ t?.description }}</td>
-          <td>
-            <button type="button" class="btn btn-warning" (click)="openEditModal(t)">Editar</button>
-            <button type="button" class="btn btn-danger" (click)="openDeleteModal(t.id)">Excluir</button>
-          </td>
-        </tr>
-        <tr *ngIf="t.data.length === 0">
-          <td colspan="3">Nenhuma tarefa encontrada.</td>
-        </tr>
-
-  </tbody>
-</table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titulo</th>
+        <th>Descrição</th>
+        <th>ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of t.data">
+        <td>{{ t?.id }}</td>
+        <td>{{ t?.title }}</td>
+        <td>{{ t?.description }}</td>
+        <td>
+          <button type="button" class="btn btn-warning" (click)="openEditModal(t)">Editar</button>
+          <button type="button" class="btn btn-danger" (click)="openDeleteModal(t.id)">
+            Excluir
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="t.data.length === 0">
+        <td colspan="3">Nenhuma tarefa encontrada.</td>
+      </tr>
+    </tbody>
+  </table>
 </ng-container>
 
-<app-tarefa-create  (created)="refresh$.next()"></app-tarefa-create>
+<app-tarefa-create (created)="refresh$.next()"></app-tarefa-create>
 
-<app-tarefa-edit *ngIf="showEditModal"
+<app-tarefa-edit
+  *ngIf="showEditModal"
   [tarefa]="selectedTask"
   (updated)="refresh$.next()"
-  (close)="closeEditModal()"></app-tarefa-edit>
+  (close)="closeEditModal()"
+></app-tarefa-edit>
 
-<app-tarefa-delete *ngIf="showDeleteModal"
+<app-tarefa-delete
+  *ngIf="showDeleteModal"
   [tarefaId]="taskIdToDelete"
   (deleted)="refresh$.next()"
-  (close)="closeDeleteModal()"></app-tarefa-delete>
-  
+  (close)="closeDeleteModal()"
+></app-tarefa-delete>

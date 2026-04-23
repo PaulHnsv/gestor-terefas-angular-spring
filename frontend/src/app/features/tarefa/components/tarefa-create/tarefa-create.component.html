@@ -1,1 +1,96 @@
-<p>tarefa-create.component.ts works!</p>
+<h2>Criar tarefa</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <ng-container *ngIf="state as vm">
+    <div style="margin-bottom: 12px">
+      <label for="titulo">Titulo *</label><br />
+      <input id="titulo" type="text" formControlName="titulo" [disabled]="loading" />
+
+      <div style="color: #b00020; margin-top: 6px" *ngIf="f.titulo.touched && f.titulo.invalid">
+        <div *ngIf="f.titulo.errors?.['required']">Titulo é obrigatório.</div>
+        <div *ngIf="f.titulo.errors?.['minlength']">Mínimo de 2 caracteres.</div>
+        <div *ngIf="f.titulo.errors?.['maxlength']">Máximo de 80 caracteres.</div>
+      </div>
+
+      <div style="color: #b00020; margin-top: 6px" *ngIf="state.fieldErrors?.['titulo']">
+        {{ state.fieldErrors?.['titulo'] }}
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px">
+      <label for="descricao">Descrição</label><br />
+      <textarea
+        id="descricao"
+        rows="3"
+        formControlName="descricao"
+        [disabled]="state.status === 'loading'"
+      ></textarea>
+
+      <div style="color: #b00020; margin-top: 6px" *ngIf="state.fieldErrors?.['descricao']">
+        {{ state.fieldErrors?.['descricao'] }}
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px">
+      <label for="prioridade">Prioridade *</label><br />
+      <select id="prioridade" formControlName="prioridade" [disabled]="loading">
+        <option value="1">Baixa</option>
+        <option value="2">Normal</option>
+        <option value="3">Alta</option>
+      </select>
+
+      <div
+        style="color: #b00020; margin-top: 6px"
+        *ngIf="f.prioridade.touched && f.prioridade.invalid"
+      >
+        <div *ngIf="f.prioridade.errors?.['required']">Prioridade é obrigatório.</div>
+      </div>
+
+      <div style="color: #b00020; margin-top: 6px" *ngIf="state.fieldErrors?.['prioridade']">
+        {{ state.fieldErrors?.['prioridade'] }}
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px">
+      <label for="status">Status *</label><br />
+      <select id="status" formControlName="status" [disabled]="loading">
+        <option value="1">Pendente</option>
+        <option value="2">Em andamento</option>
+        <option value="3">Concluída</option>
+      </select>
+
+      <div style="color: #b00020; margin-top: 6px" *ngIf="f.status.touched && f.status.invalid">
+        <div *ngIf="f.status.errors?.['required']">Status é obrigatório.</div>
+      </div>
+
+      <div style="color: #b00020; margin-top: 6px" *ngIf="state.fieldErrors?.['status']">
+        {{ state.fieldErrors?.['status'] }}
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px">
+      <label for="projeto">Projeto</label><br />
+      <select formControlName="projeto" [compareWith]="compareProject">
+        <option [ngValue]="null" disabled>Selecione um projeto</option>
+        <option *ngFor="let p of projetos$ | async" [ngValue]="p">
+          {{ p.name }}
+        </option>
+      </select>
+
+      <div style="color: #b00020; margin-top: 6px" *ngIf="state.fieldErrors?.['projeto']">
+        {{ state.fieldErrors?.['projeto'] }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="state.status === 'loading'">
+      {{ state.status === 'loading' ? 'Criando...' : 'Criar tarefa' }}
+    </button>
+
+    <div style="margin-top: 12px; color: #1b5e20" *ngIf="state.status === 'success'">
+      {{ state.successMessage }}
+    </div>
+
+    <div style="margin-top: 12px; color: #b00020" *ngIf="state.status === 'error'">
+      {{ state.errorMessage }}
+    </div>
+  </ng-container>
+</form>
