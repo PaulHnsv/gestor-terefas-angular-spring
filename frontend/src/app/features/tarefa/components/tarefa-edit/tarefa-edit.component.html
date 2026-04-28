@@ -1,39 +1,103 @@
-<!-- Modal para editar projetos -->
+<!-- Modal para editar tarefa -->
 <div class="modal-backdrop fade show"></div>
 
 <div class="modal fade show d-block" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Editar Projeto</h5>
+        <h5 class="modal-title">Editar Tarefa</h5>
         <button type="button" class="btn-close" (click)="close.emit()"></button>
       </div>
 
       <div class="modal-body">
         <form [formGroup]="editForm">
-          <div>
-            <label>Nome</label><br />
+
+          <!-- Título -->
+          <div class="form-group">
+            <label for="titulo">Título *</label>
             <input
+              id="titulo"
               type="text"
               formControlName="titulo"
-              [ngClass]="tarefa?.title ? 'valid' : 'invalid'"
+              [disabled]="loading"
+              placeholder="Título da tarefa"
             />
+            <div class="field-error" *ngIf="form.titulo.touched && form.titulo.invalid">
+              <span *ngIf="form.titulo.errors?.['required']">Título é obrigatório.</span>
+              <span *ngIf="form.titulo.errors?.['minlength']">Mínimo de 2 caracteres.</span>
+              <span *ngIf="form.titulo.errors?.['maxlength']">Máximo de 80 caracteres.</span>
+            </div>
+            <div class="field-error" *ngIf="fieldErrors?.['titulo']">{{ fieldErrors?.['titulo'] }}</div>
           </div>
 
-          <div>
-            <label>Descrição</label><br />
+          <!-- Descrição -->
+          <div class="form-group">
+            <label for="descricao">Descrição</label>
             <textarea
+              id="descricao"
               rows="3"
               formControlName="descricao"
-              [ngClass]="tarefa?.description ? 'valid' : 'invalid'"
+              [disabled]="loading"
+              placeholder="Descrição opcional"
             ></textarea>
+            <div class="field-error" *ngIf="fieldErrors?.['descricao']">{{ fieldErrors?.['descricao'] }}</div>
           </div>
+
+          <!-- Prioridade + Status -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="prioridade">Prioridade *</label>
+              <select id="prioridade" formControlName="prioridade" [disabled]="loading">
+                <option value="BAIXA">Baixa</option>
+                <option value="MEDIA">Normal</option>
+                <option value="ALTA">Alta</option>
+              </select>
+              <div class="field-error" *ngIf="form.prioridade.touched && form.prioridade.invalid">
+                <span *ngIf="form.prioridade.errors?.['required']">Prioridade é obrigatória.</span>
+              </div>
+              <div class="field-error" *ngIf="fieldErrors?.['prioridade']">{{ fieldErrors?.['prioridade'] }}</div>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Status *</label>
+              <select id="status" formControlName="status" [disabled]="loading">
+                <option [ngValue]="1">Pendente</option>
+                <option [ngValue]="2">Em andamento</option>
+                <option [ngValue]="3">Concluída</option>
+              </select>
+              <div class="field-error" *ngIf="form.status.touched && form.status.invalid">
+                <span *ngIf="form.status.errors?.['required']">Status é obrigatório.</span>
+              </div>
+              <div class="field-error" *ngIf="fieldErrors?.['status']">{{ fieldErrors?.['status'] }}</div>
+            </div>
+          </div>
+
+          <!-- Projeto -->
+          <div class="form-group" style="margin-bottom: 0">
+            <label for="projeto">Projeto *</label>
+            <select id="projeto" formControlName="projeto" [compareWith]="compareProject" [disabled]="loading">
+              <option [ngValue]="null" disabled>Selecione um projeto</option>
+              <option *ngFor="let p of projetos$ | async" [ngValue]="p">{{ p.name }}</option>
+            </select>
+            <div class="field-error" *ngIf="form.projeto.touched && form.projeto.invalid">
+              <span *ngIf="form.projeto.errors?.['required']">Projeto é obrigatório.</span>
+            </div>
+            <div class="field-error" *ngIf="fieldErrors?.['projeto']">{{ fieldErrors?.['projeto'] }}</div>
+          </div>
+
         </form>
       </div>
 
+      <!-- Erro geral -->
+      <div style="padding: 0 24px 12px" *ngIf="state.status === 'error'">
+        <div class="alert-msg alert-error">{{ state.errorMessage }}</div>
+      </div>
+
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="close.emit()">Cancelar</button>
-        <button class="btn btn-primary" (click)="submitEdit()">Salvar</button>
+        <button class="btn btn-secondary" (click)="close.emit()" [disabled]="loading">Cancelar</button>
+        <button class="btn btn-primary" (click)="submitEdit()" [disabled]="loading">
+          {{ loading ? 'Salvando...' : 'Salvar alterações' }}
+        </button>
       </div>
     </div>
   </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TarefaService } from '../../services/tarefa.service';
 import { TaskResponse } from '../../models/tarefa.model';
 import { CommonModule } from '@angular/common';
+import { ViewState } from 'src/app/shared/types/viewState.types';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   BehaviorSubject,
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { TarefaCreate } from '../../components/tarefa-create/tarefa-create.component';
 import { TarefaEdit } from '../../components/tarefa-edit/tarefa-edit.component';
 import { TarefaDelete } from '../../components/tarefa-delete/tarefa-delete.component';
+import { FormState } from 'src/app/shared/interfaces/FormState';
 
 @Component({
   selector: 'app-tarefas-list',

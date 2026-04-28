@@ -1,37 +1,40 @@
-<h2>Criar projeto</h2>
 <form [formGroup]="form" (ngSubmit)="submit()">
   <ng-container *ngIf="state as vm">
-    <div style="margin-bottom: 12px;">
-      <label for="nome">Nome *</label><br />
-      <input
-        id="nome"
-        type="text"
-        formControlName="nome"
-        [disabled]="loading"
-      />
 
-      <div style="color: #b00020; margin-top: 6px;" *ngIf="nameCtrl.touched && nameCtrl.invalid">
-        <div *ngIf="nameCtrl.errors?.['required']">Nome é obrigatório.</div>
-        <div *ngIf="nameCtrl.errors?.['minlength']">Mínimo de 2 caracteres.</div>
-        <div *ngIf="nameCtrl.errors?.['maxlength']">Máximo de 80 caracteres.</div>
+    <div class="form-row-2">
+      <!-- Nome -->
+      <div class="form-group" style="grid-column: 1 / -1">
+        <label for="nome">Nome *</label>
+        <input
+          id="nome"
+          type="text"
+          formControlName="nome"
+          [disabled]="loading"
+          placeholder="Nome do projeto"
+        />
+        <div class="field-error" *ngIf="nameCtrl.touched && nameCtrl.invalid">
+          <span *ngIf="nameCtrl.errors?.['required']">Nome é obrigatório.</span>
+          <span *ngIf="nameCtrl.errors?.['minlength']">Mínimo de 2 caracteres.</span>
+          <span *ngIf="nameCtrl.errors?.['maxlength']">Máximo de 80 caracteres.</span>
+        </div>
+        <div class="field-error" *ngIf="state.fieldErrors?.['name']">
+          {{ state.fieldErrors?.['name'] }}
+        </div>
       </div>
 
-      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['name']">
-        {{ state.fieldErrors?.['name'] }}
-      </div>
-    </div>
-
-    <div style="margin-bottom: 12px;">
-      <label for="descricao">Descrição</label><br />
-      <textarea
-        id="descricao"
-        rows="3"
-        formControlName="descricao"
-        [disabled]="state.status === 'loading'"
-      ></textarea>
-
-      <div style="color: #b00020; margin-top: 6px;" *ngIf="state.fieldErrors?.['description']">
-        {{ state.fieldErrors?.['description'] }}
+      <!-- Descrição -->
+      <div class="form-group" style="grid-column: 1 / -1">
+        <label for="descricao">Descrição</label>
+        <textarea
+          id="descricao"
+          rows="3"
+          formControlName="descricao"
+          [disabled]="loading"
+          placeholder="Descrição opcional"
+        ></textarea>
+        <div class="field-error" *ngIf="state.fieldErrors?.['description']">
+          {{ state.fieldErrors?.['description'] }}
+        </div>
       </div>
     </div>
 
@@ -39,12 +42,13 @@
       {{ state.status === 'loading' ? 'Criando...' : 'Criar projeto' }}
     </button>
 
-    <div style="margin-top: 12px; color: #1b5e20;" *ngIf="state.status === 'success'">
+    <div class="alert-msg alert-success" *ngIf="state.status === 'success'">
       {{ state.successMessage }}
     </div>
 
-    <div style="margin-top: 12px; color: #b00020;" *ngIf="state.status === 'error'">
+    <div class="alert-msg alert-error" *ngIf="state.status === 'error'">
       {{ state.errorMessage }}
     </div>
+
   </ng-container>
 </form>

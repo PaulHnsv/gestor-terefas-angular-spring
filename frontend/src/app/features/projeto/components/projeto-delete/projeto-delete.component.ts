@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { ProjetoService } from '../../services/projeto.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from 'node_modules/@angular/common/types/_common_module-chunk';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'app-projeto-delete',
+  imports: [CommonModule],
   templateUrl: './projeto-delete.component.html',
   styleUrl: './projeto-delete.component.scss',
 })

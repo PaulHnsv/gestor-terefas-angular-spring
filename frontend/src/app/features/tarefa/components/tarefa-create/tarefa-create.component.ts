@@ -6,8 +6,8 @@ import { TarefaService } from '../../services/tarefa.service';
 import { Priority } from 'src/app/shared/interfaces/Priority';
 import { Status } from 'src/app/shared/interfaces/Status';
 import { ProjectResponse } from 'src/app/features/projeto/models/projeto.model';
-import { submit } from 'node_modules/@angular/forms/types/_structure-chunk';
 import { ProjetoService } from 'src/app/features/projeto/services/projeto.service';
+import { FormState } from 'src/app/shared/interfaces/FormState';
 
 @Component({
   standalone: true,

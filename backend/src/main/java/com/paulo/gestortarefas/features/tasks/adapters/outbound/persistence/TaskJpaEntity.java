@@ -5,11 +5,13 @@ import com.paulo.gestortarefas.shared.utils.Priority;
 import com.paulo.gestortarefas.shared.utils.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "tasks")
 public class TaskJpaEntity {

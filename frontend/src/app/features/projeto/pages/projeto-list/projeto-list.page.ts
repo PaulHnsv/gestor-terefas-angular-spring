@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProjetoService } from '../../services/projeto.service';
 import { ProjectResponse } from '../../models/projeto.model';
 import { CommonModule } from '@angular/common';
+import { ViewState } from 'src/app/shared/types/viewState.types';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   BehaviorSubject,
@@ -17,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { ProjetoCreate } from '../../components/projeto-create/projeto-create.component';
 import { ProjetoEdit } from '../../components/projeto-edit/projeto-edit.component';
 import { ProjetoDelete } from '../../components/projeto-delete/projeto-delete.component';
+import { FormState } from 'src/app/shared/interfaces/FormState';
 
 @Component({
   selector: 'app-projetos-list',

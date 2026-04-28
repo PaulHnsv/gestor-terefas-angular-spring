@@ -1,56 +1,109 @@
-<h2>Tarefas</h2>
+<div class="page-wrapper">
 
-<ng-container *ngIf="tarefasFiltradas$ | async as t">
-  <div *ngIf="t.status === 'loading'">Carregando...</div>
-  <div *ngIf="t.status === 'error'" style="color: red">{{ t.message }}</div>
+  <div class="page-header">
+    <h2>Tarefas</h2>
+  </div>
 
-  <select (change)="statusFiltro$.next($any($event.target).value)">
-    <option value=0>Todos</option>
-    <option value=1>Pendente</option>
-    <option value=2>Em andamento</option>
-    <option value=3>Concluída</option>
-  </select>
+  <!-- Tabela -->
+  <div class="section-card">
 
-  <table *ngIf="t.status === 'success'" border="1" cellpadding="8" cellspacing="0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Titulo</th>
-        <th>Descrição</th>
-        <th>ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let t of t.data">
-        <td>{{ t?.id }}</td>
-        <td>{{ t?.title }}</td>
-        <td>{{ t?.description }}</td>
-        <td>
-          <button type="button" class="btn btn-warning" (click)="openEditModal(t)">Editar</button>
-          <button type="button" class="btn btn-danger" (click)="openDeleteModal(t.id)">
-            Excluir
-          </button>
-        </td>
-      </tr>
-      <tr *ngIf="t.data.length === 0">
-        <td colspan="3">Nenhuma tarefa encontrada.</td>
-      </tr>
-    </tbody>
-  </table>
-</ng-container>
+    <ng-container *ngIf="tarefasFiltradas$ | async as t">
 
-<app-tarefa-create (created)="refresh$.next()"></app-tarefa-create>
+      <!-- Filter Bar -->
+      <div class="filter-bar" *ngIf="t.status === 'success' || t.status === 'loading'">
+        <label>Filtrar por status</label>
+        <select (change)="statusFiltro$.next($any($event.target).value)">
+          <option value="0">Todos</option>
+          <option value="1">Pendente</option>
+          <option value="2">Em andamento</option>
+          <option value="3">Concluída</option>
+        </select>
+      </div>
+
+      <div *ngIf="t.status === 'loading'">
+        <table class="data-table">
+          <tbody>
+            <tr class="loading-row"><td colspan="6">Carregando tarefas...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="t.status === 'error'" class="section-card-body">
+        <div class="alert-msg alert-error">{{ t.message }}</div>
+      </div>
+
+      <table class="data-table" *ngIf="t.status === 'success'">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Prioridade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of t.data">
+            <td class="col-id">{{ t?.id }}</td>
+            <td class="col-name">{{ t?.title }}</td>
+            <td class="col-desc">{{ t?.description }}</td>
+            <td>
+              <span [ngClass]="{
+                'badge badge-pendente':  t?.status === 1,
+                'badge badge-andamento': t?.status === 2,
+                'badge badge-concluida': t?.status === 3
+              }">
+                {{ t?.status === 1 ? 'Pendente' : t?.status === 2 ? 'Em andamento' : 'Concluída' }}
+              </span>
+            </td>
+            <td>
+              <span [ngClass]="{
+                'badge badge-baixa': t?.priority === 'BAIXA',
+                'badge badge-media': t?.priority === 'MEDIA',
+                'badge badge-alta':  t?.priority === 'ALTA'
+              }">
+                {{ t?.priority === 'BAIXA' ? 'Baixa' : t?.priority === 'MEDIA' ? 'Normal' : 'Alta' }}
+              </span>
+            </td>
+            <td class="col-actions">
+              <div class="btn-icon-group">
+                <button type="button" class="btn btn-warning btn-sm" (click)="openEditModal(t)">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="openDeleteModal(t.id)">Excluir</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="t.data.length === 0" class="empty-row">
+            <td colspan="6">Nenhuma tarefa encontrada.</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </ng-container>
+  </div>
+
+  <!-- Criar Tarefa -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <h3>Nova Tarefa</h3>
+    </div>
+    <div class="section-card-body">
+      <app-tarefa-create (created)="refresh$.next()"></app-tarefa-create>
+    </div>
+  </div>
+
+</div>
 
 <app-tarefa-edit
   *ngIf="showEditModal"
   [tarefa]="selectedTask"
   (updated)="refresh$.next()"
-  (close)="closeEditModal()"
-></app-tarefa-edit>
+  (close)="closeEditModal()">
+</app-tarefa-edit>
 
 <app-tarefa-delete
   *ngIf="showDeleteModal"
   [tarefaId]="taskIdToDelete"
   (deleted)="refresh$.next()"
-  (close)="closeDeleteModal()"
-></app-tarefa-delete>
+  (close)="closeDeleteModal()">
+</app-tarefa-delete>

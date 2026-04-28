@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -42,9 +38,7 @@ public class ListTaskService implements ListTasksUseCase {
 
     @Override
     public List<TaskResponse> findByProjectId(Long id) {
-        List<Task> tasks = repository.findByProjectId(id).stream()
-                .flatMap(Optional::stream) // Java 9+
-                .toList();
+        List<Task> tasks = repository.findByProjectId(id);
 
         if (tasks.isEmpty())
             throw new ResponseStatusException(

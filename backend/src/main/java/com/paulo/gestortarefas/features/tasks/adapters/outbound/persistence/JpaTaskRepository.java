@@ -19,8 +19,8 @@ public class JpaTaskRepository implements TaskRepository {
     private TaskMapper taskMapper;
 
     @Override
-    public Task save(Task project) {
-        TaskJpaEntity entity = taskMapper.toEntity(project);
+    public Task save(Task task) {
+        TaskJpaEntity entity = taskMapper.toEntity(task);
         TaskJpaEntity saved = springData.save(entity);
         return taskMapper.toDomain(saved);
     }
@@ -44,8 +44,9 @@ public class JpaTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Optional<Task> findByProjectId(Long id){
-        return springData.findByProjectId(id)
-                .map(entity -> taskMapper.toDomain(entity));
+    public List<Task> findByProjectId(Long id) {
+        return springData.findByProjectId(id).stream()
+                .map(taskMapper::toDomain)
+                .toList();
     }
 }

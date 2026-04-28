@@ -1,46 +1,78 @@
-<h2>Projects</h2>
+<div class="page-wrapper">
 
-<ng-container *ngIf="projetos$ | async as p">
-  <div *ngIf="p.status === 'loading'">Carregando...</div>
-  <div *ngIf="p.status === 'error'" style="color: red;">{{ p.message }}</div>
+  <div class="page-header">
+    <h2>Projetos</h2>
+  </div>
 
-  <table *ngIf="p.status === 'success'" border="1" cellpadding="8" cellspacing="0">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nome</th>
-      <th>Descrição</th>
-      <th>ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    
-        <tr *ngFor="let p of p.data">
-          <td>{{ p?.id }}</td>
-          <td>{{ p?.name }}</td>
-          <td>{{ p?.description }}</td>
-          <td>
-            <button type="button" class="btn btn-warning" (click)="openEditModal(p)">Editar</button>
-            <button type="button" class="btn btn-danger" (click)="openDeleteModal(p.id)">Excluir</button>
-          </td>
-        </tr>
-        <tr *ngIf="p.data.length === 0">
-          <td colspan="3">Nenhum projeto encontrado.</td>
-        </tr>
+  <!-- Tabela -->
+  <div class="section-card">
 
-  </tbody>
-</table>
-</ng-container>
+    <ng-container *ngIf="projetos$ | async as p">
 
-<app-projeto-create  (created)="refresh$.next()"></app-projeto-create>
+      <div *ngIf="p.status === 'loading'">
+        <table class="data-table">
+          <tbody>
+            <tr class="loading-row"><td colspan="4">Carregando projetos...</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-<app-projeto-edit *ngIf="showEditModal"
+      <div *ngIf="p.status === 'error'" class="section-card-body">
+        <div class="alert-msg alert-error">{{ p.message }}</div>
+      </div>
+
+      <table class="data-table" *ngIf="p.status === 'success'">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of p.data">
+            <td class="col-id">{{ p?.id }}</td>
+            <td class="col-name">{{ p?.name }}</td>
+            <td class="col-desc">{{ p?.description }}</td>
+            <td class="col-actions">
+              <div class="btn-icon-group">
+                <button type="button" class="btn btn-warning btn-sm" (click)="openEditModal(p)">Editar</button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="openDeleteModal(p.id)">Excluir</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="p.data.length === 0" class="empty-row">
+            <td colspan="4">Nenhum projeto encontrado.</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </ng-container>
+  </div>
+
+  <!-- Criar Projeto -->
+  <div class="section-card">
+    <div class="section-card-header">
+      <h3>Novo Projeto</h3>
+    </div>
+    <div class="section-card-body">
+      <app-projeto-create (created)="refresh$.next()"></app-projeto-create>
+    </div>
+  </div>
+
+</div>
+
+<app-projeto-edit
+  *ngIf="showEditModal"
   [project]="selectedProject"
   (updated)="refresh$.next()"
-  (close)="closeEditModal()"></app-projeto-edit>
+  (close)="closeEditModal()">
+</app-projeto-edit>
 
-<app-projeto-delete *ngIf="showDeleteModal"
+<app-projeto-delete
+  *ngIf="showDeleteModal"
   [projectId]="projectIdToDelete"
   (deleted)="refresh$.next()"
-  (close)="closeDeleteModal()"></app-projeto-delete>
-  
+  (close)="closeDeleteModal()">
+</app-projeto-delete>

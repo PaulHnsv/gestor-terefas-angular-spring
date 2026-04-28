@@ -1,7 +1,7 @@
 <div class="modal-backdrop fade show"></div>
 
 <div class="modal fade show d-block" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Excluir Projeto</h5>
@@ -9,12 +9,18 @@
       </div>
 
       <div class="modal-body">
-        <p>Tem certeza que deseja excluir o projeto?</p>
+        <div class="delete-body">
+          <div class="delete-icon">🗑️</div>
+          <p>
+            <strong>Tem certeza?</strong>
+            Esta ação é irreversível. O projeto será removido permanentemente.
+          </p>
+        </div>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="deleteProjectById()">Sim</button>
-        <button type="button" class="btn btn-secondary" (click)="close.emit()">Não</button>
+        <button type="button" class="btn btn-secondary" (click)="close.emit()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="deleteProjectById()">Excluir</button>
       </div>
     </div>
   </div>

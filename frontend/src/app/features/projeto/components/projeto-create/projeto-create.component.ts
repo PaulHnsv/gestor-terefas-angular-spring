@@ -3,6 +3,7 @@ import { BehaviorSubject, catchError, EMPTY, tap } from 'rxjs';
 import { ProjetoService } from '../../services/projeto.service';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormState } from 'src/app/shared/interfaces/FormState';
 
 
 @Component({

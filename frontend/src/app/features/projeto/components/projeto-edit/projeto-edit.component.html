@@ -1,4 +1,4 @@
-<!-- Modal para editar projetos -->
+<!-- Modal para editar projeto -->
 <div class="modal-backdrop fade show"></div>
 
 <div class="modal fade show d-block" tabindex="-1">
@@ -11,29 +11,33 @@
 
       <div class="modal-body">
         <form [formGroup]="editForm">
-          <div>
-            <label>Nome</label><br />
+
+          <div class="form-group">
+            <label for="proj-nome">Nome *</label>
             <input
+              id="proj-nome"
               type="text"
               formControlName="nome"
-              [ngClass]="project?.name ? 'valid' : 'invalid'"
+              placeholder="Nome do projeto"
             />
           </div>
 
-          <div>
-            <label>Descrição</label><br />
+          <div class="form-group" style="margin-bottom: 0">
+            <label for="proj-desc">Descrição</label>
             <textarea
+              id="proj-desc"
               rows="3"
               formControlName="descricao"
-              [ngClass]="project?.description ? 'valid' : 'invalid'"
+              placeholder="Descrição opcional"
             ></textarea>
           </div>
+
         </form>
       </div>
 
       <div class="modal-footer">
         <button class="btn btn-secondary" (click)="close.emit()">Cancelar</button>
-        <button class="btn btn-primary" (click)="submitEdit()">Salvar</button>
+        <button class="btn btn-primary" (click)="submitEdit()">Salvar alterações</button>
       </div>
     </div>
   </div>

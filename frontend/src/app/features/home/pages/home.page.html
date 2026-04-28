@@ -1,34 +1,57 @@
-<h2>Status da Aplicação</h2>
+<div class="page-wrapper">
 
-<section style="margin-top: 12px;">
-  <h3>Ping</h3>
+  <div class="page-header">
+    <h2>Status da Aplicação</h2>
+  </div>
 
-  <p *ngIf="ping$ | async as ping; else pingLoading">
-    <strong>Mensagem:</strong>
-    <span [style.color]="ping.message === 'pong' ? 'green' : 'red'">
-      {{ ping.message }}
-    </span>
-    <br />
-    <strong>Timestamp:</strong> {{ ping.timestamp }}
-  </p>
+  <div class="status-grid">
 
-  <ng-template #pingLoading>
-    <p>Carregando ping...</p>
-  </ng-template>
-</section>
+    <!-- Ping -->
+    <div class="status-card">
+      <div class="status-card-label">Conectividade</div>
 
-<hr style="margin: 16px 0;" />
+      <ng-container *ngIf="ping$ | async as ping; else pingLoading">
+        <div class="status-row">
+          <span class="s-key">Mensagem</span>
+          <span [class]="ping.message === 'pong' ? 's-val s-ok' : 's-val s-err'">
+            {{ ping.message }}
+          </span>
+        </div>
+        <div class="status-row">
+          <span class="s-key">Timestamp</span>
+          <span class="s-val">{{ ping.timestamp }}</span>
+        </div>
+      </ng-container>
 
-<section>
-  <h3>Versão</h3>
+      <ng-template #pingLoading>
+        <p class="status-loading">Verificando conectividade...</p>
+      </ng-template>
+    </div>
 
-  <p *ngIf="versionInfo$ | async as versionInfo; else versionLoading">
-    <strong>App:</strong> {{ versionInfo.name }} <br />
-    <strong>Versão:</strong> {{ versionInfo.version }} <br />
-    <strong>Timestamp:</strong> {{ versionInfo.timestamp }}
-  </p>
+    <!-- Versão -->
+    <div class="status-card">
+      <div class="status-card-label">Versão</div>
 
-  <ng-template #versionLoading>
-    <p>Carregando versão...</p>
-  </ng-template>
-</section>
+      <ng-container *ngIf="versionInfo$ | async as v; else versionLoading">
+        <div class="status-row">
+          <span class="s-key">Aplicação</span>
+          <span class="s-val">{{ v.name }}</span>
+        </div>
+        <div class="status-row">
+          <span class="s-key">Versão</span>
+          <span class="s-val">{{ v.version }}</span>
+        </div>
+        <div class="status-row">
+          <span class="s-key">Timestamp</span>
+          <span class="s-val">{{ v.timestamp }}</span>
+        </div>
+      </ng-container>
+
+      <ng-template #versionLoading>
+        <p class="status-loading">Carregando informações...</p>
+      </ng-template>
+    </div>
+
+  </div>
+
+</div>

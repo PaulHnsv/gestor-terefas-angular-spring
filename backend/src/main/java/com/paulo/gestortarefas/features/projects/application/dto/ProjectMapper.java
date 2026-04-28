@@ -13,9 +13,7 @@ public interface ProjectMapper {
 
     List<ProjectResponse> toResponseList(List<Project> project);
 
-    // Domínio → Entity (para persistir)
     ProjectJpaEntity toEntity(Project project);
 
-    // Entity → Domínio (para reconstituir)
     Project toDomain(ProjectJpaEntity entity);
 }

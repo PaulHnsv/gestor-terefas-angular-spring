@@ -1,14 +1,15 @@
 package com.paulo.gestortarefas.features.tasks.application.service;
 
-import com.paulo.gestortarefas.features.tasks.adapters.outbound.persistence.SpringDataTaskRepository;
 import com.paulo.gestortarefas.features.tasks.domain.model.Task;
 import com.paulo.gestortarefas.features.tasks.domain.ports.inbound.ConcludeTaskUseCase;
 import com.paulo.gestortarefas.features.tasks.domain.ports.outbound.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-public class ConcludeTaskService  implements ConcludeTaskUseCase {
+@Service
+public class ConcludeTaskService implements ConcludeTaskUseCase {
 
     @Autowired
     private TaskRepository repository;
