@@ -11,12 +11,20 @@
 
       <!-- Filter Bar -->
       <div class="filter-bar" *ngIf="t.status === 'success' || t.status === 'loading'">
-        <label>Filtrar por status</label>
-        <select (change)="statusFiltro$.next($any($event.target).value)">
+        <label>Status</label>
+        <select (change)="onStatusChange($event)">
           <option value="0">Todos</option>
           <option value="1">Pendente</option>
           <option value="2">Em andamento</option>
           <option value="3">Concluída</option>
+        </select>
+
+        <label>Projeto</label>
+        <select (change)="onProjetoChange($event)">
+          <option value="0">Todos</option>
+          <ng-container *ngIf="projetos$ | async as projetos">
+            <option *ngFor="let p of projetos" [value]="p.id">{{ p.name }}</option>
+          </ng-container>
         </select>
       </div>
 

@@ -20,6 +20,8 @@ import { TarefaCreate } from '../../components/tarefa-create/tarefa-create.compo
 import { TarefaEdit } from '../../components/tarefa-edit/tarefa-edit.component';
 import { TarefaDelete } from '../../components/tarefa-delete/tarefa-delete.component';
 import { FormState } from 'src/app/shared/interfaces/FormState';
+import { ProjectResponse } from 'src/app/features/projeto/models/projeto.model';
+import { ProjetoService } from 'src/app/features/projeto/services/projeto.service';
 
 @Component({
   selector: 'app-tarefas-list',
@@ -33,23 +35,26 @@ export class TarefasListPage implements OnInit {
 
   refresh$ = new BehaviorSubject<void>(undefined);
   statusFiltro$ = new BehaviorSubject<number>(0);
+  projetoFiltro$ = new BehaviorSubject<string>('0');
 
   state: FormState = { status: 'idle', fieldErrors: {} };
 
   showDeleteModal = false;
-  showSearchByIdModal: any;
-
   selectedTask: TaskResponse | null = null;
   taskIdToDelete: string | null = null;
   showEditModal = false;
 
-  constructor(private tarefaService: TarefaService) {}
+  projetos$!: Observable<ProjectResponse[]>;
+
+  constructor(private tarefaService: TarefaService, private projetoService: ProjetoService) {}
 
   ngOnInit(): void {
     this.carregar();
   }
 
   carregar(): void {
+    this.projetos$ = this.projetoService.list();
+
     this.tarefas$ = this.refresh$.pipe(
       switchMap(() =>
         this.tarefaService.list().pipe(
@@ -67,19 +72,36 @@ export class TarefasListPage implements OnInit {
       shareReplay(1),
     );
 
-    this.tarefasFiltradas$ = combineLatest([this.tarefas$, this.statusFiltro$]).pipe(
-      map(([viewState, filtro]) => {
+    // Filtro unificado: status + projeto aplicados em sequência
+    this.tarefasFiltradas$ = combineLatest([
+      this.tarefas$,
+      this.statusFiltro$,
+      this.projetoFiltro$,
+    ]).pipe(
+      map(([viewState, statusFiltro, projetoFiltro]) => {
         if (viewState.status !== 'success') return viewState;
 
-        const filtradas =
-          filtro === 0
-            ? viewState.data
-            : viewState.data.filter((t) => t.status === filtro);
+        let filtradas = viewState.data;
 
-        // Devolve um novo ViewState com os dados filtrados
+        if (statusFiltro !== 0) {
+          filtradas = filtradas.filter((t) => t.status === statusFiltro);
+        }
+
+        if (projetoFiltro !== '0') {
+          filtradas = filtradas.filter((t) => String(t.project?.id) === projetoFiltro);
+        }
+
         return { ...viewState, data: filtradas };
       }),
     );
+  }
+
+  onStatusChange(event: Event): void {
+    this.statusFiltro$.next(+(event.target as HTMLSelectElement).value);
+  }
+
+  onProjetoChange(event: Event): void {
+    this.projetoFiltro$.next((event.target as HTMLSelectElement).value);
   }
 
   openDeleteModal(taskId: string) {
@@ -88,7 +110,6 @@ export class TarefasListPage implements OnInit {
   }
 
   openEditModal(task: TaskResponse) {
-    console.log('Tarefa selecionada para edição:', task);
     this.selectedTask = task;
     this.showEditModal = true;
   }
