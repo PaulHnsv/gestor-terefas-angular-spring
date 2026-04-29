@@ -72,7 +72,6 @@ export class TarefasListPage implements OnInit {
       shareReplay(1),
     );
 
-    // Filtro unificado: status + projeto aplicados em sequência
     this.tarefasFiltradas$ = combineLatest([
       this.tarefas$,
       this.statusFiltro$,

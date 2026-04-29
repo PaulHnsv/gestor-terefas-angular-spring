@@ -9,13 +9,12 @@ import { Status } from 'src/app/shared/interfaces/Status';
 import { FormState } from 'src/app/shared/interfaces/FormState';
 import { catchError, EMPTY, Observable, tap } from 'rxjs';
 import { ProjetoService } from 'src/app/features/projeto/services/projeto.service';
-import { AsyncPipe } from '@angular/common';
 
 
 @Component({
   standalone: true,
   selector: 'app-tarefa-edit',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, AsyncPipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './tarefa-edit.component.html',
   styleUrl: './tarefa-edit.component.scss',
 })
@@ -76,7 +75,7 @@ export class TarefaEdit implements OnInit {
       descricao: this.fb.control<string | null>(null),
       prioridade: this.fb.control<Priority>('MEDIA', [Validators.required]),
       status: this.fb.control<Status>(1, [Validators.required]),
-      projeto: this.fb.control<ProjectResponse | null>(null, [Validators.required]),
+      projeto: this.fb.control<ProjectResponse | null>({value: null, disabled: true}, [Validators.required]),
     });
   }
 
@@ -90,7 +89,7 @@ export class TarefaEdit implements OnInit {
 
     const editPayload: TaskRequest = {
       title: (this.editForm.value.titulo ?? '').trim(),
-      project: this.editForm.value.projeto as ProjectResponse,
+      project: this.tarefa.project, // Projeto não editável aqui, manter o original
       priority: this.editForm.value.prioridade!,
       status: this.editForm.value.status!,
       description: this.editForm.value.descricao?.trim() || null,

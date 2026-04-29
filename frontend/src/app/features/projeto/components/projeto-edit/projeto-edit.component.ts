@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProjectResponse } from '../../models/projeto.model';
 import { ProjetoService } from '../../services/projeto.service';
-import { BehaviorSubject } from 'rxjs';
+import { catchError, EMPTY, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormState } from 'src/app/shared/interfaces/FormState';
 @Component({
   standalone: true,
   selector: 'app-projeto-edit',
@@ -12,12 +13,12 @@ import { CommonModule } from '@angular/common';
   styleUrl: './projeto-edit.component.scss',
 })
 export class ProjetoEdit implements OnInit {
-@Input() project: ProjectResponse | null = null;
+  @Input() project: ProjectResponse | null = null;
 
-@Output() updated = new EventEmitter<void>();
-@Output() close = new EventEmitter<void>();
+  @Output() updated = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>();
 
-
+  state: FormState = { status: 'idle', fieldErrors: {} };
   editForm;
   constructor(
     private fb: FormBuilder,
@@ -27,7 +28,7 @@ export class ProjetoEdit implements OnInit {
   }
   ngOnInit(): void {}
 
-    ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['project'] && this.project) {
       this.editForm.patchValue({
         nome: this.project.name,
@@ -51,15 +52,35 @@ export class ProjetoEdit implements OnInit {
       description: this.editForm.value.descricao?.trim() || null,
     };
 
-    this.projetoService.update(this.project.id, editPayload).subscribe({
-      next: () => {
-        this.updated.emit();
-        this.close.emit();
-      },
-      error: (err) => {
-        console.error('Erro ao atualizar projeto:', err);
-      },
-    });
+    this.projetoService
+      .update(this.project.id, editPayload)
+      .pipe(
+        tap(() => {
+          this.updated.emit();
+          this.close.emit();
+        }),
+        catchError((err) => {
+          const body = err?.error;
+          this.state = {
+            status: 'error',
+            errorMessage: body?.message || 'Falha ao atualizar projeto.',
+            fieldErrors: body?.fieldErrors ?? {},
+          };
+          return EMPTY;
+        }),
+      )
+      .subscribe();
   }
 
+  get loading() {
+    return this.state.status === 'loading';
+  }
+
+  get form() {
+    return this.editForm.controls;
+  }
+
+  get fieldErrors() {
+    return this.state.fieldErrors;
+  }
 }
