@@ -38,7 +38,7 @@
             <td class="col-actions">
               <div class="btn-icon-group">
                 <button type="button" class="btn btn-warning btn-sm" (click)="openEditModal(p)">Editar</button>
-                <button type="button" class="btn btn-danger btn-sm" (click)="openDeleteModal(p.id)">Excluir</button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="openDeleteModal(p)">Excluir</button>
               </div>
             </td>
           </tr>
@@ -73,6 +73,7 @@
 <app-projeto-delete
   *ngIf="showDeleteModal"
   [projectId]="projectIdToDelete"
+  [projectName]="projectNameToDelete"
   (deleted)="refresh$.next()"
   (close)="closeDeleteModal()">
 </app-projeto-delete>

@@ -11,9 +11,13 @@ import { CommonModule } from '@angular/common';
 })
 export class ProjetoDelete {
   @Input() projectId: string | null = null;
+  @Input() projectName: string | null = null;
 
   @Output() deleted = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
+
+  errorMessage: string | null = null;
+  isLoading = false;
   
   ngOnInit(): void {}
 
@@ -27,14 +31,20 @@ export class ProjetoDelete {
   deleteProjectById() {
     if (!this.projectId) return;
 
+    this.isLoading = true;
+    this.errorMessage = null;
+
     this.projetoService.delete(this.projectId).subscribe({
       next: () => {
+        this.isLoading = false;
         this.deleted.emit();
         this.close.emit();
       },
       error: () => {
-        // Trate o erro conforme necessário
+        this.errorMessage = 'Falha ao excluir o projeto. Tente novamente.';
+        this.isLoading = false;
       },
     });
   }
+
 }

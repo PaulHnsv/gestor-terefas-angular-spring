@@ -77,7 +77,7 @@
             <td class="col-actions">
               <div class="btn-icon-group">
                 <button type="button" class="btn btn-warning btn-sm" (click)="openEditModal(t)">Editar</button>
-                <button type="button" class="btn btn-danger btn-sm" (click)="openDeleteModal(t.id)">Excluir</button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="openDeleteModal(t)">Excluir</button>
               </div>
             </td>
           </tr>
@@ -112,6 +112,7 @@
 <app-tarefa-delete
   *ngIf="showDeleteModal"
   [tarefaId]="taskIdToDelete"
+  [tarefaTitle]="taskTitleToDelete"
   (deleted)="refresh$.next()"
   (close)="closeDeleteModal()">
 </app-tarefa-delete>

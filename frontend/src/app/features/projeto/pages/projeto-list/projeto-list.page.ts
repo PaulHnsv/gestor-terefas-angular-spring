@@ -38,6 +38,7 @@ export class ProjetosListPage implements OnInit {
   selectedProject: ProjectResponse | null = null;
   projectIdToDelete: string | null = null;
   showEditModal = false;
+  projectNameToDelete: string | null = null;
 
   constructor(private projetoService: ProjetoService) {}
 
@@ -64,10 +65,12 @@ export class ProjetosListPage implements OnInit {
     );
   }
 
-  openDeleteModal(projectId: string) {
-    this.projectIdToDelete = projectId;
+  openDeleteModal(project: ProjectResponse) {
+    this.projectIdToDelete = project.id;
+    this.projectNameToDelete = project.name;
     this.showDeleteModal = true;
   }
+
 
   openEditModal(project: ProjectResponse) {
     console.log('Projeto selecionado para edição:', project);
@@ -83,5 +86,7 @@ export class ProjetosListPage implements OnInit {
   closeDeleteModal() {
     this.showDeleteModal = false;
     this.selectedProject = null;
+    this.projectNameToDelete = null;
+    this.projectIdToDelete = null;
   }
 }

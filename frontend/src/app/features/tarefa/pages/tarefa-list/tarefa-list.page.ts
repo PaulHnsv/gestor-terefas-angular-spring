@@ -42,6 +42,7 @@ export class TarefasListPage implements OnInit {
   showDeleteModal = false;
   selectedTask: TaskResponse | null = null;
   taskIdToDelete: string | null = null;
+  taskTitleToDelete: string | null = null;
   showEditModal = false;
 
   projetos$!: Observable<ProjectResponse[]>;
@@ -103,8 +104,9 @@ export class TarefasListPage implements OnInit {
     this.projetoFiltro$.next((event.target as HTMLSelectElement).value);
   }
 
-  openDeleteModal(taskId: string) {
-    this.taskIdToDelete = taskId;
+  openDeleteModal(task: TaskResponse) {
+    this.taskIdToDelete = task.id;
+    this.taskTitleToDelete = task.title;
     this.showDeleteModal = true;
   }
 
@@ -121,5 +123,7 @@ export class TarefasListPage implements OnInit {
   closeDeleteModal() {
     this.showDeleteModal = false;
     this.selectedTask = null;
+    this.taskIdToDelete = null;
+    this.taskTitleToDelete = null;
   }
 }

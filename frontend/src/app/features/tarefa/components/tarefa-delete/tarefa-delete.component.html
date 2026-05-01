@@ -5,22 +5,34 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Excluir Tarefa</h5>
-        <button type="button" class="btn-close" (click)="close.emit()"></button>
+        <button type="button" class="btn-close" [disabled]="isLoading" (click)="close.emit()"></button>
       </div>
 
       <div class="modal-body">
         <div class="delete-body">
           <div class="delete-icon">🗑️</div>
-          <p>
-            <strong>Tem certeza?</strong>
-            Esta ação é irreversível. A tarefa será removida permanentemente.
-          </p>
+          <div>
+            <p>
+              <strong>Tem certeza?</strong>
+              Esta ação é irreversível. A tarefa será removida permanentemente.
+            </p>
+            <p *ngIf="tarefaTitle" class="text-muted fst-italic mb-0">
+              "{{ tarefaTitle }}"
+            </p>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0" role="alert">
+          {{ errorMessage }}
         </div>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="close.emit()">Cancelar</button>
-        <button type="button" class="btn btn-danger" (click)="deleteTarefaById()">Excluir</button>
+        <button type="button" class="btn btn-secondary" [disabled]="isLoading" (click)="close.emit()">Cancelar</button>
+        <button type="button" class="btn btn-danger" [disabled]="isLoading" (click)="deleteTarefaById()">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status"></span>
+          Excluir
+        </button>
       </div>
     </div>
   </div>
