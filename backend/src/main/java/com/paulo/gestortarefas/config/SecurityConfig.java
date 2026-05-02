@@ -3,7 +3,6 @@ package com.paulo.gestortarefas.config;
 import com.paulo.gestortarefas.infra.persistence.security.CustomUserDetailsService;
 import com.paulo.gestortarefas.infra.web.security.JwtAuthenticationFilter;
 import com.paulo.gestortarefas.shared.security.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

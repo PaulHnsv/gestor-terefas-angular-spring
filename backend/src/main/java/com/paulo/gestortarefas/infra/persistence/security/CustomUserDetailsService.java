@@ -1,55 +1,29 @@
 package com.paulo.gestortarefas.infra.persistence.security;
 
-import org.springframework.security.core.userdetails.User;
+import com.paulo.gestortarefas.infra.ports.outbound.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final PasswordEncoder encoder;
+    @Autowired
+    private UserRepository repository;
 
-    public CustomUserDetailsService(PasswordEncoder encoder) {
-        this.encoder = encoder;
+    public CustomUserDetailsService() {
     }
 
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
 
-        if (!username.equals("admin")) {
-            throw new UsernameNotFoundException("Usuário não encontrado");
-        }
+        return repository.findByUsername(username)
+                .orElseThrow(()
+                        -> new UsernameNotFoundException("Usuário não encontrado: " + username));
 
-        return User.builder()
-                .username("admin")
-                .password(encoder.encode("123"))
-                .roles("USER")
-                .build();
     }
-
-//    private final UsuarioRepository usuarioRepository;
-//
-//    public CustomUserDetailsService(UsuarioRepository usuarioRepository) {
-//        this.usuarioRepository = usuarioRepository;
-//    }
-//
-//    @Override
-//    public UserDetails loadUserByUsername(String username)
-//            throws UsernameNotFoundException {
-//
-//        Usuario usuario = usuarioRepository.findByEmail(username)
-//                .orElseThrow(() ->
-//                        new UsernameNotFoundException("Usuário não encontrado"));
-//
-//        return User.builder()
-//                .username(usuario.getEmail())
-//                .password(usuario.getSenha())
-//                .roles(usuario.getRole()) // ex: "USER"
-//                .build();
-//    }
 }
 
