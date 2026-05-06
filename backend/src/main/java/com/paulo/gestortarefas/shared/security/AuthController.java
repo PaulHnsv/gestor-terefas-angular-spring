@@ -1,13 +1,11 @@
 package com.paulo.gestortarefas.shared.security;
 
-import com.paulo.gestortarefas.shared.utils.LoginRequest;
+import com.paulo.gestortarefas.infra.persistence.security.UserCreateService;
+import com.paulo.gestortarefas.infra.persistence.security.UserValidateService;
+import com.paulo.gestortarefas.shared.utils.UserRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -15,28 +13,27 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final JwtService jwtService;
+    private final UserCreateService userCreateService;
+    private final UserValidateService userValidateService;
 
-    private final AuthenticationManager authenticationManager;
-
-    public AuthController(JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
+    public AuthController(UserCreateService userCreateService, UserValidateService userValidateService) {
+        this.userCreateService = userCreateService;
+        this.userValidateService = userValidateService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        System.out.println(request);
+    public ResponseEntity<?> login(@RequestBody UserRequest request) {
 
-        authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken.unauthenticated(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-
-        String token = jwtService.generateToken(request.getUsername());
+        String token = userValidateService.validateUser(request);
 
         return ResponseEntity.ok(Map.of("token", token));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserRequest request){
+
+        String token = userCreateService.registerUser(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("token", token));
     }
 }

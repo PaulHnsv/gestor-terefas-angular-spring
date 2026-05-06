@@ -10,10 +10,15 @@ import java.util.Optional;
 public class JpaUserRepository implements UserRepository {
 
     @Autowired
-    private SpringDataUserRepository springData;
+    private SpringDataUserRepository userRepository;
 
     @Override
     public Optional<UserJpaEntity> findByUsername(String username) {
-        return springData.findByUsername(username);
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserJpaEntity save(UserJpaEntity user) {
+        return userRepository.save(user);
     }
 }

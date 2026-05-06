@@ -8,4 +8,5 @@ public interface UserRepository {
 
     Optional<UserJpaEntity> findByUsername(String username);
 
+    UserJpaEntity save(UserJpaEntity user);
 }

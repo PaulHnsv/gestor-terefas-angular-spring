@@ -114,4 +114,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status).body(body);
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyExists(UserAlreadyExistsException ex,
+                                                            HttpServletRequest req) {
+        return build(HttpStatus.CONFLICT,
+                "USER_ALREADY_EXISTS",
+                ex.getMessage(),
+                req,
+                null);
+    }
 }
