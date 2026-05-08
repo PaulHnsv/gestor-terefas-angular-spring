@@ -18,13 +18,16 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.API}/login`, data)
       .pipe(
         tap(response => {
+          const payload = JSON.parse(atob(response.token.split('.')[1]));
           localStorage.setItem('token', response.token);
+          localStorage.setItem('username', payload.sub);
         })
       );
   }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
   }
 
   getToken(): string | null {
@@ -33,5 +36,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  getUsername(): string | null {
+    return localStorage.getItem('username');
   }
 }
