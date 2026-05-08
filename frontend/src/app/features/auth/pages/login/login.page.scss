@@ -78,3 +78,24 @@
   margin-top: 8px;
   letter-spacing: -.01em;
 }
+
+.input-wrapper {
+  position: relative;
+
+  input {
+    padding-right: 80px; // espaço para o botão não sobrepor o texto
+  }
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-2);
+  font-family: var(--font);
+}

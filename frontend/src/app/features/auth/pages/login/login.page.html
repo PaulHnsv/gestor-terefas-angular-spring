@@ -26,13 +26,18 @@
 
       <div class="form-group">
         <label for="password">Senha</label>
-        <input
+        <div class="input-wrapper">
+          <input
           id="password"
-          type="password"
+          [type]="showPassword ? 'text' : 'password'"
           formControlName="password"
           placeholder="••••••••"
           autocomplete="current-password"
         />
+        <button type="button" class="btn-toggle-password" (click)="togglePassword()">
+          {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+        </button>
+        </div>
       </div>
 
       <button type="submit" class="btn btn-primary login-btn">

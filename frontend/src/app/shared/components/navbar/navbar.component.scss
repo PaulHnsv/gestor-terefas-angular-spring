@@ -1,0 +1,104 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 56px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+// ─── Brand ─────────────────────────────────────────────────────────────────────
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  font-size: 18px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.navbar-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.02em;
+}
+
+// ─── Nav Links ─────────────────────────────────────────────────────────────────
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link {
+  padding: 5px 12px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--accent-pale);
+    color: var(--accent);
+  }
+
+  &.active {
+    background: var(--accent-pale);
+    color: var(--accent);
+    font-weight: 600;
+  }
+}
+
+// ─── Actions ───────────────────────────────────────────────────────────────────
+.navbar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+
+  svg {
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+
+  &:hover {
+    background: var(--red-pale);
+    color: var(--red);
+    border-color: #fecaca;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+
+    svg {
+      transform: translateX(2px);
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

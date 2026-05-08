@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class Login {
   loginForm: FormGroup;
+  showPassword = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService,
   private router: Router) {
@@ -31,6 +32,10 @@ onSubmit() {
         error: () => alert('Login inválido')
       });
   }
+}
+
+togglePassword(): void {
+  this.showPassword = !this.showPassword;
 }
 
 }
