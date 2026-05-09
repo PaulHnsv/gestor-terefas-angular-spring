@@ -4,25 +4,24 @@ import { Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
+import { RegisterRequest } from '../models/register-request.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  private API =  environment.apiUrl + '/auth';
+  private API = environment.apiUrl + '/auth';
 
   constructor(private http: HttpClient) {}
 
   login(data: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.API}/login`, data)
-      .pipe(
-        tap(response => {
-          const payload = JSON.parse(atob(response.token.split('.')[1]));
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('username', payload.sub);
-        })
-      );
+    return this.http.post<LoginResponse>(`${this.API}/login`, data).pipe(
+      tap((response) => {
+        const payload = JSON.parse(atob(response.token.split('.')[1]));
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('username', payload.sub);
+      }),
+    );
   }
 
   logout() {
@@ -40,5 +39,9 @@ export class AuthService {
 
   getUsername(): string | null {
     return localStorage.getItem('username');
+  }
+
+  register(data: RegisterRequest): Observable<void> {
+    return this.http.post<void>(`${this.API}/register`, data);
   }
 }

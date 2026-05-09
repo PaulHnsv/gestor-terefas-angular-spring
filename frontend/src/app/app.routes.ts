@@ -5,6 +5,7 @@ import { TarefasListPage } from './features/tarefa/pages/tarefa-list/tarefa-list
 import { Login } from './features/auth/pages/login/login.page';
 import { authGuard } from './core/guards/auth.guard';
 import { loginGuard } from './core/guards/login.guard';
+import { RegisterPage } from './features/auth/pages/register/register.page';
 
 export const routes: Routes = [
   { path: 'home', component: HomePage, canActivate: [authGuard] },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'tasks', component: TarefasListPage, canActivate: [authGuard] },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login, pathMatch: 'full', canActivate: [loginGuard] },
+  { path: 'register', component: RegisterPage, canActivate: [loginGuard] },
   { path: '**', redirectTo: 'login' },
 ];
