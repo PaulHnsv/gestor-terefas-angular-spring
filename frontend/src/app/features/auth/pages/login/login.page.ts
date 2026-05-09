@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { LoginRequest } from 'src/app/core/models/login-request.model';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { FormState } from 'src/app/shared/interfaces/FormState';
 
 @Component({
   selector: 'app-login',
@@ -13,29 +14,48 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class Login {
-  loginForm: FormGroup;
+  loginForm;
   showPassword = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService,
-  private router: Router) {
-    this.loginForm = this.fb.group({
+  state: FormState = { status: 'idle', fieldErrors: {} };
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+  ) {
+    this.loginForm = this.createForm();
+  }
+
+  private createForm() {
+    return this.fb.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-onSubmit() {
-  if (this.loginForm.valid) {
-    this.authService.login(this.loginForm.value as LoginRequest)
-      .subscribe({
-        next: () => this.router.navigate(['/home']),
-        error: () => alert('Login inválido')
-      });
+  get f() {
+    return this.loginForm.controls;
   }
-}
 
-togglePassword(): void {
-  this.showPassword = !this.showPassword;
-}
+  get loading() {
+    return this.state.status === 'loading';
+  }
 
+  get fieldErrors() {
+    return this.state.fieldErrors;
+  }
+
+  onSubmit() {
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value as LoginRequest).subscribe({
+        next: () => this.router.navigate(['/home']),
+        error: () => alert('Login inválido'),
+      });
+    }
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
 }
