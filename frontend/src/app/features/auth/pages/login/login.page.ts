@@ -47,12 +47,23 @@ export class Login {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value as LoginRequest).subscribe({
-        next: () => this.router.navigate(['/home']),
-        error: () => alert('Login inválido'),
-      });
-    }
+    if (this.loginForm.invalid) return;
+
+    this.state = { status: 'loading', fieldErrors: {} };
+
+    this.authService.login(this.loginForm.value as LoginRequest).subscribe({
+      next: () => {
+        this.state = { status: 'success', fieldErrors: {} };
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        const message =
+          err.status === 401
+            ? 'Usuário ou senha incorretos.'
+            : 'Erro ao realizar login. Tente novamente.';
+        this.state = { status: 'error', errorMessage: message, fieldErrors: {} };
+      },
+    });
   }
 
   togglePassword(): void {

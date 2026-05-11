@@ -65,7 +65,20 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary login-btn">Criar conta</button>
+      <div class="form-status-error" *ngIf="state.status === 'error'">
+        {{ state.errorMessage }}
+      </div>
+
+      <div class="form-status-success" *ngIf="state.status === 'success'">
+        {{ state.successMessage }}
+      </div>
+
+      <button type="submit" class="btn btn-primary login-btn" [disabled]="loading">
+        <span *ngIf="!loading">Criar conta</span>
+        <span *ngIf="loading" class="btn-loading">
+          <span class="spinner"></span> Criando conta...
+        </span>
+      </button>
       <a routerLink="/login" class="login-link">Já tem conta? Faça login</a>
     </form>
   </div>

@@ -96,7 +96,10 @@
           Cancelar
         </button>
         <button class="btn btn-primary" (click)="submitEdit()" [disabled]="loading">
-          {{ loading ? 'Salvando...' : 'Salvar alterações' }}
+          <span *ngIf="!loading">Salvar alterações</span>
+          <span *ngIf="loading" class="btn-loading">
+            <span class="spinner"></span> Salvando...
+          </span>
         </button>
       </div>
     </div>

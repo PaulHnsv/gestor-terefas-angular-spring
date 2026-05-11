@@ -84,7 +84,10 @@
     </div>
 
     <button type="submit" class="btn btn-primary" [disabled]="state.status === 'loading'">
-      {{ state.status === 'loading' ? 'Criando...' : 'Criar tarefa' }}
+      <span *ngIf="state.status !== 'loading'">Criar tarefa</span>
+      <span *ngIf="state.status === 'loading'" class="btn-loading">
+        <span class="spinner"></span> Criando...
+      </span>
     </button>
 
     <div class="alert-msg alert-success" *ngIf="state.status === 'success'">

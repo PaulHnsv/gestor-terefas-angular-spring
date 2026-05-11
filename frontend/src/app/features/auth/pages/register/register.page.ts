@@ -50,12 +50,27 @@ export class RegisterPage {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      this.authService.register(this.registerForm.value as RegisterRequest).subscribe({
-        next: () => this.router.navigate(['/login']),
-        error: () => alert('Registro inválido'),
-      });
-    }
+    if (this.registerForm.invalid) return;
+
+    this.state = { status: 'loading', fieldErrors: {} };
+
+    this.authService.register(this.registerForm.value as RegisterRequest).subscribe({
+      next: () => {
+        this.state = {
+          status: 'success',
+          successMessage: 'Conta criada com sucesso! Redirecionando...',
+          fieldErrors: {},
+        };
+        setTimeout(() => this.router.navigate(['/login']), 1500);
+      },
+      error: (err) => {
+        const message =
+          err.status === 409
+            ? 'Este usuário já está cadastrado.'
+            : 'Erro ao criar conta. Tente novamente.';
+        this.state = { status: 'error', errorMessage: message, fieldErrors: {} };
+      },
+    });
   }
 
   togglePassword(): void {
